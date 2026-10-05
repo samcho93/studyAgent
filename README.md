@@ -5,7 +5,7 @@ LLM 이 스스로 **계획하고 · 도구를 호출하고 · 기억하고 · �
 
 - 🌐 사이트: https://samcho93.github.io/studyAgent/
 - 🎓 학생용: https://samcho93.github.io/studyAgent/student.html
-- 🧑‍🏫 교사용: https://samcho93.github.io/studyAgent/teacher.html (기본 비밀번호 `agent2026` — `js/course.js` 의 `teacherPass` 에서 변경)
+- 🧑‍🏫 교사용: https://samcho93.github.io/studyAgent/teacher.html (기본 비밀번호 `samcho93` — `js/course.js` 의 `teacherPass` 에서 변경)
 
 ## 특징
 

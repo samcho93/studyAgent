@@ -4,7 +4,7 @@
  */
 window.PY_COURSE = {
   title: 'AI 에이전트 구축: 파이썬으로 만드는 LLM 에이전트',
-  teacherPass: 'agent2026',   // 교사용 화면 비밀번호 (바꿔서 쓰세요)
+  teacherPass: 'samcho93',   // 교사용 화면 비밀번호 (바꿔서 쓰세요)
   subtitle: 'Python · Tool Calling · Memory · LangGraph · CrewAI · AutoGen',
   github: { user: 'samcho93', repo: 'studyAgent', branch: 'main' },
   parts: [
