@@ -2,20 +2,22 @@
 (function () {
   const ARROW = (id) => `<defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fill-arrow"/></marker></defs>`;
 
-  const FIG_SERIES = `<svg viewBox="0 0 720 210" role="img" aria-label="시리즈 다섯 과정: 머신러닝 기초, MLStudio, LLM, RAG, 에이전트. 이 과정은 다섯 번째">
+  const FIG_SERIES = `<svg viewBox="0 0 720 210" role="img" aria-label="시리즈 여섯 과정: 머신러닝 기초, MLStudio, LLM, RAG, 에이전트, 온톨로지. 이 과정은 다섯 번째">
   ${ARROW('m00a1')}
-  <rect x="10" y="40" width="120" height="70" rx="12" class="p2s"/><text x="70" y="68" text-anchor="middle" class="tx-b">① ML 기초</text><text x="70" y="90" text-anchor="middle" class="tx-m">회귀 · 분류 · 딥러닝</text>
-  <rect x="155" y="40" width="120" height="70" rx="12" class="p2s"/><text x="215" y="68" text-anchor="middle" class="tx-b">② MLStudio</text><text x="215" y="90" text-anchor="middle" class="tx-m">실전 모델링</text>
-  <rect x="300" y="40" width="120" height="70" rx="12" class="p3s"/><text x="360" y="68" text-anchor="middle" class="tx-b">③ LLM</text><text x="360" y="90" text-anchor="middle" class="tx-m">트랜스포머 · 프롬프트</text>
-  <rect x="445" y="40" width="120" height="70" rx="12" class="p3s"/><text x="505" y="68" text-anchor="middle" class="tx-b">④ RAG</text><text x="505" y="90" text-anchor="middle" class="tx-m">검색 증강 생성</text>
-  <rect x="590" y="30" width="120" height="90" rx="12" class="p1"/><text x="650" y="62" text-anchor="middle" class="tx-w" font-weight="700">⑤ 에이전트</text><text x="650" y="84" text-anchor="middle" class="tx-w">도구 · 기억 · 계획</text><text x="650" y="104" text-anchor="middle" class="tx-w">프레임워크</text>
-  <line x1="132" y1="75" x2="151" y2="75" class="ln" stroke-width="2" marker-end="url(#m00a1)"/>
-  <line x1="277" y1="75" x2="296" y2="75" class="ln" stroke-width="2" marker-end="url(#m00a1)"/>
-  <line x1="422" y1="75" x2="441" y2="75" class="ln" stroke-width="2" marker-end="url(#m00a1)"/>
-  <line x1="567" y1="75" x2="586" y2="75" class="ln" stroke-width="2" marker-end="url(#m00a1)"/>
-  <text x="650" y="145" text-anchor="middle" class="tx-b">이 과정</text>
-  <text x="360" y="160" text-anchor="middle" class="tx-m">③ 과 ④ 에서 배운 LLM 호출 · 프롬프트 · 검색을 “스스로 행동하는 프로그램”으로 엮습니다</text>
-  <text x="360" y="190" text-anchor="middle" class="tx-m">파이썬 기초와 LLM API 를 한 번쯤 써 본 적이 있으면 충분합니다</text>
+  <rect x="8" y="40" width="106" height="70" rx="12" class="p2s"/><text x="61" y="68" text-anchor="middle" class="tx-b">① ML 기초</text><text x="61" y="90" text-anchor="middle" class="tx-m" font-size="11">회귀 · 분류 · 딥러닝</text>
+  <rect x="126" y="40" width="106" height="70" rx="12" class="p2s"/><text x="179" y="68" text-anchor="middle" class="tx-b">② MLStudio</text><text x="179" y="90" text-anchor="middle" class="tx-m" font-size="11">실전 모델링</text>
+  <rect x="244" y="40" width="106" height="70" rx="12" class="p3s"/><text x="297" y="68" text-anchor="middle" class="tx-b">③ LLM</text><text x="297" y="90" text-anchor="middle" class="tx-m" font-size="11">트랜스포머 · 프롬프트</text>
+  <rect x="362" y="40" width="106" height="70" rx="12" class="p3s"/><text x="415" y="68" text-anchor="middle" class="tx-b">④ RAG</text><text x="415" y="90" text-anchor="middle" class="tx-m" font-size="11">검색 증강 생성</text>
+  <rect x="480" y="30" width="106" height="90" rx="12" class="p1"/><text x="533" y="64" text-anchor="middle" class="tx-w" font-weight="700">⑤ 에이전트</text><text x="533" y="86" text-anchor="middle" class="tx-w" font-size="11">도구 · 기억 · 계획</text>
+  <rect x="598" y="40" width="106" height="70" rx="12" class="p3s"/><text x="651" y="68" text-anchor="middle" class="tx-b">⑥ 온톨로지</text><text x="651" y="90" text-anchor="middle" class="tx-m" font-size="11">지식 그래프 · 추론</text>
+  <line x1="115" y1="75" x2="125" y2="75" class="ln" stroke-width="2" marker-end="url(#m00a1)"/>
+  <line x1="233" y1="75" x2="243" y2="75" class="ln" stroke-width="2" marker-end="url(#m00a1)"/>
+  <line x1="351" y1="75" x2="361" y2="75" class="ln" stroke-width="2" marker-end="url(#m00a1)"/>
+  <line x1="469" y1="75" x2="479" y2="75" class="ln" stroke-width="2" marker-end="url(#m00a1)"/>
+  <line x1="587" y1="75" x2="597" y2="75" class="ln" stroke-width="2" marker-end="url(#m00a1)"/>
+  <text x="533" y="145" text-anchor="middle" class="tx-b">이 과정</text>
+  <text x="360" y="172" text-anchor="middle" class="tx-m">③ 과 ④ 에서 배운 LLM 호출 · 프롬프트 · 검색을 “스스로 행동하는 프로그램”으로 엮고, ⑥ 에서 지식을 구조화합니다</text>
+  <text x="360" y="198" text-anchor="middle" class="tx-m">파이썬 기초와 LLM API 를 한 번쯤 써 본 적이 있으면 충분합니다</text>
 </svg>`;
 
   const FIG_SCREEN = `<svg viewBox="0 0 720 340" role="img" aria-label="강좌 화면 구성: 왼쪽 목차와 API 키 버튼, 가운데 강의 문서와 코드 편집기, 오른쪽 실행 결과 창">
@@ -179,8 +181,8 @@
         content: [
           { type: 'p', html: '챗봇에게 질문하면 답이 돌아옵니다. 그런데 “다음 주 부산 출장 일정을 짜고, 날씨를 확인하고, 숙소를 찾아 메모해 줘” 같은 일은 질문 한 번으로 끝나지 않습니다. 모델이 <b>스스로 계획을 세우고, 도구를 쓰고, 결과를 보고 다음 행동을 정해야</b> 합니다. 이렇게 행동하는 LLM 프로그램이 <b>AI 에이전트</b>이고, 이 강좌는 그것을 파이썬으로 직접 만드는 과정입니다.' },
           { type: 'h', text: '시리즈 학습 경로와 이 과정의 위치' },
-          { type: 'p', html: '이 강좌는 다섯 개 과정으로 이어지는 시리즈의 <b>다섯 번째</b>입니다. ③ LLM 과정에서 모델 자체를, ④ RAG 과정에서 검색으로 답을 보강하는 방법을 배웠다면, 이번에는 그 LLM 을 <b>행동하는 프로그램</b>으로 묶습니다. 앞 과정을 듣지 않았더라도 파이썬 기초와 “LLM API 를 한 번 호출해 본 경험” 정도면 충분히 따라올 수 있습니다.' },
-          { type: 'figure', html: FIG_SERIES, caption: '그림 0-1. 시리즈 ①~⑤. 이 과정(⑤)은 LLM 호출 · 프롬프트 · 검색을 “도구 · 기억 · 계획”으로 엮어 에이전트를 만듭니다.' },
+          { type: 'p', html: '이 강좌는 여섯 개 과정으로 이어지는 시리즈의 <b>다섯 번째</b>입니다. ③ LLM 과정에서 모델 자체를, ④ RAG 과정에서 검색으로 답을 보강하는 방법을 배웠다면, 이번에는 그 LLM 을 <b>행동하는 프로그램</b>으로 묶습니다. 마지막 ⑥ 온톨로지 과정에서는 에이전트가 기댈 지식을 관계 · 규칙으로 명시하는 법을 배웁니다. 앞 과정을 듣지 않았더라도 파이썬 기초와 “LLM API 를 한 번 호출해 본 경험” 정도면 충분히 따라올 수 있습니다.' },
+          { type: 'figure', html: FIG_SERIES, caption: '그림 0-1. 시리즈 ①~⑥. 이 과정(⑤)은 LLM 호출 · 프롬프트 · 검색을 “도구 · 기억 · 계획”으로 엮어 에이전트를 만듭니다.' },
           { type: 'table', head: ['Part', '차시', '내용', '핵심 도구'], rows: [
             ['1. 에이전트 시작하기', '00~02', '실습 환경 · API 키, 에이전트 개념, LLM API 다루기', 'agentlab · Gemini/OpenAI SDK'],
             ['2. 4대 핵심 요소', '03~06', '역할(페르소나), 도구 호출, 기억(단기 · 벡터), 계획과 반성', 'agentlab'],
@@ -314,7 +316,7 @@ for role in roles:
           { layout: 'title', title: 'AI 에이전트 구축', subtitle: '강좌 안내 · 실습 환경 · 첫 코드 실행', notes: '<p>첫 시간입니다. “챗봇과 에이전트가 무엇이 다른가?”로 시작해 강좌 전체 로드맵을 보여 주고, 오늘 목표는 “실습 환경에 익숙해지고 첫 LLM 호출을 해 보기”라고 안내합니다.</p><p>⏱ 도입 · 로드맵 10분</p>' },
           { layout: 'bullets', title: '챗봇과 에이전트는 무엇이 다를까?', lead: '“다음 주 부산 출장 일정 짜고, 날씨 확인하고, 숙소 찾아서 메모해 줘”', bullets: ['💬 챗봇: 질문 한 번 → 답 한 번', '🤖 에이전트: 목표를 받아 <b>스스로 계획</b>하고', '🔧 <b>도구</b>(날씨 API · 검색 · 메모)를 호출하고', '👁 결과를 <b>관찰</b>해 다음 행동을 정한다', '이 강좌: 그런 프로그램을 파이썬으로 직접 만든다'],
             notes: '<p><b>발문:</b> “챗GPT 에게 ‘내일 서울 날씨 알려줘’ 라고 하면 뭐라고 답할까요?” → 실시간 정보를 모른다고 답하거나 지어낸다. “그럼 날씨 사이트를 대신 봐 주려면 무엇이 필요할까?” → 도구. 이 질문이 1차시로 이어집니다.</p>' },
-          { layout: 'diagram', title: '시리즈 학습 경로', html: FIG_SERIES, caption: '이 과정은 ⑤ — LLM 을 “행동하는 프로그램”으로',
+          { layout: 'diagram', title: '시리즈 학습 경로', html: FIG_SERIES, caption: '이 과정은 ⑤ (여섯 과정 중) — LLM 을 “행동하는 프로그램”으로, 다음은 ⑥ 온톨로지',
             notes: '<p>앞 과정(③ LLM, ④ RAG)을 안 들은 학생도 괜찮다고 안심시킵니다. 필요한 선수 지식: 파이썬 기초(함수 · 딕셔너리 · 반복문), LLM API 를 한 번쯤 호출해 본 경험.</p>' },
           { layout: 'table', title: '강좌 로드맵', head: ['Part', '차시', '내용'], rows: [
             ['1', '00~02', '실습 환경 · 에이전트 개념 · LLM API'], ['2', '03~06', '역할 · 도구 · 기억 · 계획/반성'], ['3', '07~10', 'LangChain · LangGraph · CrewAI · AutoGen'], ['4', '11~13', '프로젝트 2개 · 평가 · 안전 · 배포']
