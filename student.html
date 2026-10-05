@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>학생용 · AI 에이전트 구축 강좌</title>
+  <script>
+    // 학생용 페이지: 문서형 강좌 + 실습 모드로 연다
+    var q = new URLSearchParams(location.search); q.set('role', 'student');
+    location.replace('index.html?' + q + location.hash);
+  </script>
+</head>
+<body>
+  <p><a href="index.html?role=student">학생용 강좌 페이지로 이동</a></p>
+</body>
+</html>

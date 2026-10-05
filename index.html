@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 에이전트 구축 · 파이썬 웹 실습 강좌</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕵️</text></svg>">
+  <script>
+    // GitHub Pages 처럼 헤더를 설정할 수 없는 곳: 서비스 워커로 교차 출처 격리를 켠다 (실행 중 input() 입력에 필요)
+    (function () {
+      if (window.crossOriginIsolated || !window.isSecureContext || !('serviceWorker' in navigator)) return;
+      var n = +(sessionStorage.getItem('coiReload') || 0);
+      if (n >= 2) return; // 새로고침 반복 방지
+      navigator.serviceWorker.register('coi-sw.js').then(function (reg) {
+        var reload = function () { sessionStorage.setItem('coiReload', String(n + 1)); location.reload(); };
+        if (reg.active && !navigator.serviceWorker.controller) reload();
+        navigator.serviceWorker.addEventListener('controllerchange', function () { if (!window.crossOriginIsolated) reload(); });
+      }).catch(function () { /* 사용할 수 없음 */ });
+    })();
+    window.addEventListener('load', function () { if (window.crossOriginIsolated) sessionStorage.removeItem('coiReload'); });
+  </script>
+
+  <!-- 글꼴 -->
+  <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap">
+
+  <!-- 코드 에디터 (CodeMirror 5) -->
+  <link rel="stylesheet" crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+  <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
+  <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/runmode/runmode.min.js"></script>
+  <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+  <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+  <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/comment/comment.min.js"></script>
+  <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/slides.css">
+  <link rel="stylesheet" href="css/gui.css">
+</head>
+<body>
+  <div id="app" class="layout">
+    <!-- ========== 왼쪽: 네비게이션 ========== -->
+    <aside id="nav" class="pane nav">
+      <div class="brand">
+        <a class="brand-logo" href="#home" title="처음 화면">🕵️</a>
+        <div class="brand-text">
+          <div class="brand-title">AI Agent Lab</div>
+          <div class="brand-sub" id="brandSub">Python · LLM 에이전트</div>
+        </div>
+        <button id="themeBtn" class="icon-btn" title="라이트/다크 전환" aria-label="테마 전환">◐</button>
+        <button id="navCloseBtn" class="icon-btn nav-close" title="메뉴 접기" aria-label="메뉴 접기">⟨</button>
+      </div>
+      <div class="role-switch" role="group" aria-label="보기 대상">
+        <button data-role="student" title="학생용: 문서 형태의 강좌 + 실습">🎓 학생용</button>
+        <button data-role="teacher" title="교사용: PPT 슬라이드 + 교사 노트 + 정답 · 타이머">🧑‍🏫 교사용</button>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>학습 진도</span><span id="progressText">0 / 0</span></div>
+        <div class="progress"><div id="progressBar" class="progress-fill"></div></div>
+      </div>
+      <input id="navSearch" class="nav-search" type="search" placeholder="검색 (예: 도구 호출, 메모리, CrewAI)">
+      <nav id="navTree" class="nav-tree" aria-label="강좌 목차"></nav>
+      <div class="nav-foot">
+        <button id="serverBtn" class="server-badge" title="파이썬 실행 환경 정보">
+          <span class="dot"></span><span id="serverText">파이썬 준비 전</span>
+        </button>
+      </div>
+    </aside>
+    <div class="gutter" data-resize="nav" title="드래그하여 너비 조절"></div>
+
+    <!-- ========== 가운데: 강좌 내용 (문서 / 슬라이드) + 코드 에디터 ========== -->
+    <main id="center" class="pane center">
+      <div class="topbar">
+        <button id="navOpenBtn" class="icon-btn nav-open" title="메뉴 펼치기" aria-label="메뉴 펼치기">☰</button>
+        <div id="crumb" class="crumb"></div>
+        <span class="spacer"></span>
+        <div class="view-switch" role="group" aria-label="보기 방식">
+          <button data-view="doc" title="문서 보기">📄 문서</button>
+          <button data-view="slides" title="슬라이드 보기 (PPT)">🖼️ 슬라이드</button>
+        </div>
+        <button id="prevBtn" class="btn ghost small" title="이전 교시">◀</button>
+        <button id="nextBtn" class="btn ghost small" title="다음 교시">▶</button>
+      </div>
+
+      <!-- 문서 보기 -->
+      <div id="docView" class="doc-view">
+        <div id="content" class="content" tabindex="-1"></div>
+        <div class="hgutter" data-resize="editor" title="드래그하여 높이 조절"></div>
+        <section id="editorPane" class="editor-pane">
+          <div class="editor-bar">
+            <span class="editor-title">🧪 실습 코드 <span id="editorLabel" class="muted"></span></span>
+            <span class="spacer"></span>
+            <button id="foldBtn" class="btn ghost small" title="에디터 접기/펼치기">▾ 접기</button>
+            <button id="fontDownBtn" class="btn ghost small" title="글자 작게">A−</button>
+            <button id="fontUpBtn" class="btn ghost small" title="글자 크게">A+</button>
+            <button id="resetBtn" class="btn ghost small" title="불러온 원래 코드로 되돌리기">↺ 초기화</button>
+            <button id="copyBtn" class="btn ghost small" title="코드 복사">⧉ 복사</button>
+            <button id="runBtn" class="btn primary" title="실행 (Ctrl+Enter)">▶ 실행</button>
+          </div>
+          <div id="editorHost" class="editor-host"></div>
+        </section>
+      </div>
+
+      <!-- 슬라이드 보기 -->
+      <div id="slideView" class="slide-view hidden">
+        <div id="deckBar" class="deck-bar">
+          <!-- 첫째 줄: 이동과 보기 -->
+          <div class="deck-row">
+            <button id="sFirst" class="dk-btn" title="처음 슬라이드 (Home)">⏮<span class="lbl">처음</span></button>
+            <button id="sPrev" class="dk-btn" title="이전 슬라이드 (← , PageUp)">◀</button>
+            <span id="sCount" class="s-count">1 / 1</span>
+            <button id="sNext" class="dk-btn" title="다음 슬라이드 (→ , Space, PageDown)">▶</button>
+            <input id="sSlider" class="s-slider" type="range" min="1" max="1" value="1" step="1" title="끌어서 원하는 쪽으로 이동" aria-label="슬라이드 이동">
+            <span id="sTitle" class="s-slide-title"></span>
+            <span class="spacer"></span>
+            <span class="teacher-only timer" id="timerBox">
+              <button id="timerBtn" class="timer-btn" title="수업 타이머 시작/일시정지 (T)">⏱ <span id="timerText">00:00</span></button>
+              <button id="timerReset" class="icon-btn small" title="타이머 초기화">↺</button>
+            </span>
+            <button id="sPresenter" class="dk-btn teacher-only" title="발표자 창: 교사 노트 · 다음 슬라이드 · 타이머를 다른 모니터에 표시">🗒<span class="lbl">발표자 창</span></button>
+            <button id="sGrid" class="dk-btn" title="슬라이드 목록 (G)">▦<span class="lbl">목록</span></button>
+            <button id="sDoc" class="dk-btn" title="문서 보기로 전환">📄<span class="lbl">문서</span></button>
+            <button id="sFull" class="dk-btn primary" title="전체 화면 발표 (F)">⛶<span class="lbl">전체 화면</span></button>
+          </div>
+          <!-- 둘째 줄: 판서 도구 (교사용) -->
+          <div class="deck-row ink-row teacher-only" id="inkBar">
+            <span class="ink-label">✏️<span class="lbl">판서</span></span>
+            <span class="ink-group" id="inkTools">
+              <button class="dk-btn ink-btn" data-tool="pen" title="펜">🖊<span class="lbl">펜</span></button>
+              <button class="dk-btn ink-btn" data-tool="marker" title="형광펜 (반투명 · 굵게)">🖍<span class="lbl">형광펜</span></button>
+              <button class="dk-btn ink-btn" data-tool="eraser" title="지우개 (스친 획을 통째로 삭제)">🧽<span class="lbl">지우개</span></button>
+              <button class="dk-btn ink-btn" data-tool="laser" title="지시봉 (그리지 않고 가리키기)">👆<span class="lbl">지시봉</span></button>
+            </span>
+            <span class="ink-group" id="inkColors"></span>
+            <span class="ink-group" id="inkWidths"></span>
+            <span class="ink-group">
+              <button class="dk-btn ink-btn" id="inkUndo" title="되돌리기 (Ctrl+Z)">↶<span class="lbl">되돌리기</span></button>
+              <button class="dk-btn ink-btn" id="inkClear" title="이 슬라이드의 판서 지우기">🗑<span class="lbl">이 장 지우기</span></button>
+              <button class="dk-btn ink-btn" id="inkClearAll" title="이 강의의 판서 모두 지우기">🗑<span class="lbl">모두</span></button>
+            </span>
+          </div>
+          <div class="deck-progress"><i id="deckProgress"></i></div>
+        </div>
+        <div id="deckWrap" class="deck-wrap">
+          <div id="stageHost" class="stage-host">
+            <div id="stage" class="stage">
+              <div id="slideLayer" class="slide-layer"></div>
+              <canvas id="inkCanvas" class="ink-canvas"></canvas>
+              <div class="edge edge-prev" data-edge="prev" title="이전 슬라이드"><span>‹</span></div>
+              <div class="edge edge-next" data-edge="next" title="다음 슬라이드"><span>›</span></div>
+              <div id="blackout" class="blackout hidden"></div>
+            </div>
+          </div>
+          <div id="fsConsoleSlot" class="fs-console-slot"></div>
+          <div id="gridOverlay" class="grid-overlay hidden"></div>
+        </div>
+        <div id="notesPane" class="notes-pane teacher-only">
+          <div class="notes-head" id="notesHead">
+            <b>🗒 교사용 노트</b>
+            <span class="spacer"></span>
+            <span id="notesNext" class="notes-next"></span>
+            <button id="notesToggle" class="btn ghost small" title="교사 노트 접기/펴기 (N)">▾ 접기</button>
+          </div>
+          <div id="notesBody" class="notes-body"></div>
+        </div>
+      </div>
+    </main>
+    <div class="gutter" data-resize="out" title="드래그하여 너비 조절"></div>
+
+    <!-- ========== 오른쪽: 실행 결과 (콘솔) ========== -->
+    <aside id="output" class="pane output">
+      <div id="consolePanel" class="console-panel">
+        <div class="console-head">
+          <span class="console-dots"><i></i><i></i><i></i></span>
+          <span class="console-title">콘솔 <span id="consoleMain" class="muted"></span></span>
+          <span class="spacer"></span>
+          <span id="runState" class="run-state idle">대기</span>
+        </div>
+        <div class="console-tools">
+          <button id="stopBtn" class="btn small danger" disabled title="실행 중지 (Ctrl+C)">■ 중지</button>
+          <button id="clearBtn" class="btn small ghost" title="콘솔 지우기">⌫ 지우기</button>
+          <button id="replBtn" class="btn small ghost" title="대화형 모드: >>> 에 한 줄씩 입력해 바로 결과 보기 (IDLE 셸)">&gt;&gt;&gt; 셸</button>
+          <button id="filesBtn" class="btn small ghost" title="프로그램이 만든 파일 · 예제 그림 파일 보기">📁 작업 폴더</button>
+          <span class="spacer"></span>
+          <button id="cFontDown" class="btn small ghost" title="글자 작게">A−</button>
+          <button id="cFontUp" class="btn small ghost" title="글자 크게">A+</button>
+          <button id="consoleHideBtn" class="btn small ghost fs-only" title="결과 패널 닫기 (R)">✕</button>
+        </div>
+        <div id="jcConsole" class="console" tabindex="0">
+          <div class="console-welcome">
+            <div class="cw-icon">&gt;_</div>
+            <p><b>▶ 실행</b>을 누르면 파이썬 코드의 실행 결과가 여기에 표시됩니다.</p>
+            <p class="muted">에이전트의 <b>생각 → 도구 호출 → 관찰 → 답</b> 과정이 단계별로 출력됩니다.
+              🔑 API 키가 없으면 모의 LLM 이 답하고, 키를 넣으면 Gemini · Groq 등 실제 모델이 답합니다.</p>
+          </div>
+        </div>
+        <form id="stdinForm" class="stdin-form" autocomplete="off">
+          <span class="prompt">⌨</span>
+          <input id="stdinInput" type="text" placeholder="프로그램 실행 중 입력 → Enter" disabled spellcheck="false">
+          <button type="button" id="eofBtn" class="btn small ghost" disabled title="입력 끝(EOF) 보내기 — Ctrl+D">EOF</button>
+        </form>
+        <div class="console-status"><span id="statusLeft">준비</span><span class="spacer"></span><span id="statusRight"></span></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- 모달 -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-head"><b id="modalTitle"></b><span class="spacer"></span><button id="modalClose" class="icon-btn" aria-label="닫기">✕</button></div>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="js/course.js"></script>
+  <script src="js/keys.js"></script>
+  <script src="js/mlb.js"></script>
+  <script src="js/highlight.js"></script>
+  <script src="js/annotate.js"></script>
+  <script src="js/py-engine.js"></script>
+  <script src="js/gui.js"></script>
+  <script src="js/runner.js"></script>
+  <script src="js/slides.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+/* 파이썬 GUI 창 (tkinter · turtle · pygame) — 윈도 기본 모양을 흉내 낸다 (테마와 무관하게 밝은 색) */
+.gui-layer { position: fixed; inset: 0; pointer-events: none; z-index: 900; }
+.gui-layer > * { pointer-events: auto; }
+
+.gw {
+  position: absolute; left: 40px; top: 60px; background: #f0f0f0; color: #000;
+  border: 1px solid #7a7a7a; border-radius: 8px 8px 4px 4px; overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .35), 0 2px 8px rgba(0, 0, 0, .2);
+  font: 12px "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; outline: none;
+}
+.gw:focus-within, .gw:focus { border-color: #3b7fd4; }
+.gw-title {
+  display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 4px 0 10px; background: #fff;
+  border-bottom: 1px solid #e3e3e3; cursor: move; user-select: none; touch-action: none;
+}
+.gw:focus-within .gw-title, .gw:focus .gw-title { background: #eaf2fd; }
+.gw-icon { font-size: 13px; }
+.gw-t { font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60vw; }
+.gw-sp { flex: 1; }
+.gw-btn {
+  border: 0; background: transparent; width: 34px; height: 26px; border-radius: 4px; cursor: pointer;
+  font-size: 13px; color: #333; line-height: 1;
+}
+.gw-btn:hover { background: #e5e5e5; }
+.gw-close:hover, .gd-x:hover { background: #e81123; color: #fff; }
+.gw.minimized .gw-clip, .gw.minimized .gw-menubar { display: none; }
+.gw-clip { position: relative; overflow: hidden; }
+.gw-body { position: relative; transform-origin: 0 0; overflow: hidden; background: #f0f0f0; }
+.gw-pg .gw-body { background: #000; }
+.pg-canvas { display: block; image-rendering: auto; touch-action: none; }
+
+/* 메뉴 */
+.gw-menubar { display: flex; background: #fff; border-bottom: 1px solid #e3e3e3; padding: 1px 2px; user-select: none; }
+.gw-menubar.hidden { display: none; }
+.gm-top { padding: 3px 9px; cursor: default; border-radius: 3px; }
+.gm-top:hover, .gm-top.open { background: #cce8ff; }
+.gm-top.dis { color: #999; }
+.gm-drop {
+  position: absolute; min-width: 160px; background: #f2f2f2; border: 1px solid #ccc; padding: 3px;
+  box-shadow: 2px 4px 12px rgba(0, 0, 0, .25); font: 12px "Segoe UI", "Malgun Gothic", sans-serif; color: #000; user-select: none;
+}
+.gm-item { display: flex; align-items: center; padding: 4px 8px 4px 2px; cursor: default; border-radius: 2px; }
+.gm-item.hover { background: #91c9f7; }
+.gm-item.dis { color: #999; }
+.gm-mark { width: 20px; text-align: center; font-size: 11px; }
+.gm-l { flex: 1; white-space: nowrap; }
+.gm-acc { color: #555; margin-left: 24px; white-space: nowrap; }
+.gm-sep { height: 1px; background: #ccc; margin: 3px 4px 3px 22px; }
+
+/* 위젯 공통 */
+.tkw { position: absolute; box-sizing: border-box; left: 0; top: 0; }
+.tk-root { position: relative; }
+.tk-frame, .tk-labelframe { overflow: hidden; }
+.tk-labelframe .tk-lf-label { position: absolute; left: 8px; top: 0; padding: 0 3px; background: inherit; font: inherit; white-space: nowrap; }
+.tk-label, .tk-button, .tk-check { display: flex; overflow: hidden; white-space: pre; user-select: none; line-height: 1.3; }
+.tk-c { display: inline-flex; align-items: center; gap: 2px; max-width: 100%; }
+.tk-c.col { flex-direction: column; }
+.tk-stack { display: grid; place-items: center; }
+.tk-stack > * { grid-area: 1 / 1; }
+.tk-t { white-space: pre; }
+.tk-img { display: block; }
+.tk-button {
+  background: #e1e1e1; border: 1px solid #adadad; cursor: default; padding: 1px 6px;
+}
+.tk-button:not(.custom):hover { background: #e5f1fb; border-color: #0078d7; }
+.tk-button.down:not(.custom) { background: #cce4f7; border-color: #005499; }
+.tk-button.custom.down { border-style: inset !important; }
+.tk-button.disabled, .tk-label.disabled, .tk-check.disabled { color: #a0a0a0 !important; }
+.tk-check { gap: 2px; cursor: default; }
+.tk-check input { margin: 0 3px 0 1px; flex: none; }
+.tk-entry { display: flex; align-items: stretch; background: #fff; border: 1px solid #7a7a7a; }
+.tk-entry input { flex: 1; min-width: 0; border: 0; outline: 0; padding: 1px 3px; font: inherit; background: #fff; color: #000; }
+.tk-entry:focus-within { border-color: #0078d7; }
+.tk-spin { display: flex; flex-direction: column; width: 16px; border-left: 1px solid #ccc; }
+.tk-spin b { flex: 1; font-size: 7px; display: flex; align-items: center; justify-content: center; cursor: default; background: #f0f0f0; font-weight: 400; }
+.tk-spin b:hover { background: #e5f1fb; }
+.tk-combo { width: 18px; border: 0; border-left: 1px solid #ccc; background: #f0f0f0; }
+.tk-text { border: 1px solid #7a7a7a; background: #fff; }
+.tk-text textarea { width: 100%; height: 100%; border: 0; outline: 0; resize: none; padding: 3px; box-sizing: border-box; font: 13px Consolas, monospace; }
+.tk-listbox { background: #fff; border: 1px solid #828790; overflow: auto; outline: none; user-select: none; }
+.tk-li { padding: 0 3px; white-space: pre; cursor: default; line-height: 1.35; }
+.tk-listbox:focus .tk-li.sel { outline: 1px dotted #000; outline-offset: -1px; }
+.tk-scale { display: flex; flex-direction: column; align-items: stretch; justify-content: center; padding: 1px 4px; user-select: none; }
+.tk-scale.vert { flex-direction: row; align-items: center; }
+.tk-scale-label { font-size: 12px; white-space: nowrap; }
+.tk-scale-val { font-size: 12px; text-align: center; min-width: 20px; }
+.tk-scale input { margin: 0; accent-color: #0078d7; }
+.tk-scale.vert input { writing-mode: vertical-lr; }
+.tk-canvas { overflow: hidden; }
+.tk-canvas canvas { position: absolute; left: 0; top: 0; display: block; touch-action: none; }
+.tk-hl { position: absolute; inset: 0; border: 0 solid #f0f0f0; pointer-events: none; }
+.tk-canvas > .tkw { z-index: 1; }
+.tk-scrollbar { background: #f0f0f0; border: 1px solid #ddd; }
+.tk-option select { width: 100%; height: 100%; font: inherit; }
+.tk-progress { background: #e6e6e6; border: 1px solid #bcbcbc; }
+.tk-progress i { display: block; height: 100%; background: #06b025; }
+.tk-menu-hidden { display: none !important; }
+
+/* 대화상자 */
+.gd-back { position: absolute; inset: 0; background: rgba(0, 0, 0, .12); display: flex; align-items: center; justify-content: center; }
+.gd {
+  min-width: 320px; max-width: min(560px, 92vw); background: #fff; color: #000; border: 1px solid #888; border-radius: 8px; overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, .35); font: 13px "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+}
+.gd-title { display: flex; align-items: center; height: 30px; padding-left: 12px; font-size: 12.5px; border-bottom: 1px solid #eee; }
+.gd-body { display: flex; gap: 14px; padding: 18px 18px 10px; }
+.gd-icon { font-size: 28px; line-height: 1; }
+.gd-main { flex: 1; min-width: 0; }
+.gd-msg { line-height: 1.55; word-break: keep-all; }
+.gd-detail { color: #555; margin-top: 6px; }
+.gd-in { width: 100%; box-sizing: border-box; margin-top: 10px; padding: 5px 7px; border: 1px solid #7a7a7a; font: inherit; outline: none; }
+.gd-in:focus { border-color: #0078d7; }
+.gd-err { color: #c42b1c; font-size: 12px; min-height: 16px; margin-top: 4px; }
+.gd-color { width: 80px; height: 40px; margin-top: 8px; }
+.gd-btns { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 16px; background: #f3f3f3; border-top: 1px solid #e5e5e5; }
+.gd-b {
+  min-width: 80px; padding: 5px 12px; border: 1px solid #adadad; background: #e1e1e1; border-radius: 3px; cursor: pointer; font: inherit; color: #000;
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+}
+.gd-b:hover { background: #e5f1fb; border-color: #0078d7; }
+.gd-b.primary { border-color: #0078d7; }
+.gd-types { color: #555; font-size: 12px; margin-bottom: 6px; }
+.gd-files { border: 1px solid #ccc; height: 190px; overflow: auto; background: #fff; }
+.gd-file { padding: 3px 8px; cursor: default; white-space: nowrap; }
+.gd-file:hover { background: #e5f3ff; }
+.gd-file.sel { background: #cce8ff; }
+.gd-empty { padding: 20px; color: #777; text-align: center; }
+.gd-up { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.gd-up .muted { color: #666; font-size: 12px; }
+.gd-lbl { display: block; margin-top: 10px; }
