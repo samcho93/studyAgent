@@ -11,7 +11,7 @@
 | 배포 URL | `https://samcho93.github.io/studyAgent` |
 | 기간 | 14차시 (차시당 2~3교시 × 50분) |
 | 언어 | 한국어 (코드 주석·변수명은 영어) |
-| 시리즈 | ① studyMLBasic → ② MLStudio → ③ studyLLM → ④ studyRAG → ⑤ **studyAgent (이 과정)** |
+| 시리즈 | ① studyMLBasic → ② MLStudio → ③ studyLLM → ④ studyRAG → ⑤ **studyAgent (이 과정)** → ⑥ studyOntology |
 
 학습 흐름: **원리를 브라우저에서 직접 구현(agentlab)** → **실제 프레임워크(LangChain · LangGraph · CrewAI · AutoGen)를 Colab 에서 사용** → **프로젝트 2개**(비서 에이전트 · 마케팅 에이전트 팀).
 

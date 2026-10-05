@@ -569,6 +569,10 @@ svg .fill-arrow { fill: var(--f-line); }
 .pathway .card { position: relative; }
 .pathway .card:not(:last-child)::after { content: "→"; position: absolute; top: 50%; right: -12px; transform: translate(50%, -50%); color: var(--muted); font-weight: 800; }
 .pathway .card.is-here { border: 2px solid var(--accent); background: var(--accent-soft); cursor: default; }
+/* 여섯 과정 학습 경로: 가운데 칸 폭에 맞춰 줄바꿈, 순서는 ①~⑥ 번호로 */
+.pathway.path-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 700px) { .pathway.path-6 { grid-template-columns: 1fr 1fr; } }
+.pathway.path-6 .card:not(:last-child)::after { content: none; }
 .pathway .card.is-here:hover { transform: none; }
 .pathway .card .cn { color: var(--muted); }
 .pathway .card.is-here .cn { color: var(--accent); }
