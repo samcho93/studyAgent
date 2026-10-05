@@ -107,10 +107,10 @@ al.embed(texts) · al.cosine(a, b) · al.Embedder(llm)
 
 # 미니 LangChain
 al.PromptTemplate('…{x}…', system='…') | llm | al.StrOutputParser() / al.JsonOutputParser()  → .invoke({...})
-al.RunnableLambda(fn) · al.chain(a, b, c)
+al.RunnableLambda(fn) · al.RunnableParallel({...}) · al.RunnablePassthrough() · al.ChatPromptTemplate.from_messages([...]) · al.chain(a, b, c)
 # 미니 LangGraph
 g = al.StateGraph(); g.add_node('n', fn); g.add_edge(al.START, 'n'); g.add_conditional_edges('n', router, {'a': 'n2', 'done': al.END})
-app = g.compile(); app.invoke(state) · for ev in app.stream(state) · g.draw()
+app = g.compile(checkpointer=al.MemorySaver()); app.invoke(state, {'thread_id': 'a'}) · for ev in app.stream(state) · g.draw()
 # 미니 CrewAI
 al.CrewAgent(role, goal, backstory, llm, tools) · al.Task(description, expected_output, agent, context=[...]) · al.Crew(agents, tasks, verbose=True).kickoff()
 # 미니 AutoGen

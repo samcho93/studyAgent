@@ -49,6 +49,7 @@ class Task:
         self.agent = agent
         self.context = context or []
         self.name = name or description[:30]
+        self.template = description      # kickoff(inputs=) 로 채우기 전의 원본
         self.output = None
 
     def __repr__(self):
@@ -70,9 +71,15 @@ class Crew:
         if self.process == 'hierarchical' and self.manager_llm is not None:
             roles = '\n'.join(f'{i}: {a.role} — {a.goal}' for i, a in enumerate(self.agents))
             r = self.manager_llm.chat([_system('너는 팀 매니저다. 작업에 가장 알맞은 담당자의 번호만 답해라.'), _user(f'작업: {task.description}\n\n담당자 후보:\n{roles}')]).content
+            r = r.strip()
+            if r.isdigit() and int(r) < len(self.agents):
+                return self.agents[int(r)]
             for i, a in enumerate(self.agents):
-                if str(i) in r or a.role in r:
+                if a.role in r:
                     return a
+            m = __import__('re').search(r'\b(\d)\b', r)
+            if m and int(m.group(1)) < len(self.agents):
+                return self.agents[int(m.group(1))]
         return self.agents[0]
 
     def kickoff(self, inputs=None):
@@ -81,7 +88,7 @@ class Crew:
         self.outputs = []
         for i, task in enumerate(self.tasks, 1):
             if inputs:
-                task.description = task.description.format(**inputs)
+                task.description = task.template.format(**inputs)
             agent = self._pick_agent(task)
             ctx_tasks = task.context or ([self.tasks[i - 2]] if i > 1 and self.process == 'sequential' else [])
             ctx = '\n\n'.join(f'({t.name}) {t.output}' for t in ctx_tasks if t.output)

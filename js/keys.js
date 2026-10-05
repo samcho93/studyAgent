@@ -129,7 +129,7 @@
       save(collect());
       modal.classList.add('hidden');
       if (window.PyApp && PyApp.runCode) {
-        PyApp.runCode("import agentlab as al\nal.status()\nllm = al.LLM()\nprint('응답:', llm.ask('한 문장으로 인사해줘'))\nprint('토큰:', llm.total_usage)", { label: 'LLM 연결 테스트' });
+        PyApp.runCode("import agentlab as al\nal.status()\nllm = al.LLM()\nprint('응답:', llm.ask('안녕하세요, 한 문장으로 인사해줘'))\nprint('토큰:', llm.total_usage)", { label: 'LLM 연결 테스트' });
       }
     };
   }

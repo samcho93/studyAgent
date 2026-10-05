@@ -15,7 +15,7 @@ from .llm import Response, ToolCall, Usage
 
 CITIES = ['서울', '부산', '대구', '인천', '광주', '대전', '울산', '세종', '수원', '성남', '제주', '강릉', '춘천', '전주', '청주', '포항', '창원',
           '도쿄', '오사카', '베이징', '상하이', '뉴욕', '런던', '파리', '베를린', '시드니', '싱가포르', '방콕', '하노이', '타이베이', '홍콩']
-GREETINGS = ('안녕', 'hello', 'hi', '반가')
+GREETINGS = ('안녕', 'hello', 'hi', '반가', '인사')
 
 
 def _text(m):
@@ -108,9 +108,12 @@ class MockLLM:
         return Response(self._plain_answer(messages, q))
 
     def _pick_tool(self, q, schemas, messages):
+        q = _core_request(q)
         ql = q.lower()
         names = {s['name']: s for s in schemas}
-        used = {tc['name'] for m in messages if m.get('role') == 'assistant' for tc in (m.get('tool_calls') or [])}
+        # 이번 턴(마지막 user 메시지 이후)에 이미 호출한 도구는 다시 고르지 않는다
+        last_user = max([i for i, m in enumerate(messages) if m.get('role') == 'user'] or [-1])
+        used = {tc['name'] for m in messages[last_user + 1:] if m.get('role') == 'assistant' for tc in (m.get('tool_calls') or [])}
 
         def find(*keys):
             for n, s in names.items():
