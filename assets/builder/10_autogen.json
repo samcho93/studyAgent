@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "name": "10 코드 작성 ↔ 리뷰 · 그룹 채팅 (AutoGen)",
+  "description": "개발자와 리뷰어가 번갈아 대화하며 코드를 완성한다(2자 대화). 아래에는 기획자 · 개발자 · 디자이너의 그룹 채팅 회의. (studyAgent 10차시)",
+  "nodes": [
+    {"id": "n1", "type": "input", "label": "요청", "x": 40, "y": 80, "config": {"text": "두 수를 더하는 파이썬 함수를 작성해줘", "name": "request"}},
+    {"id": "n2", "type": "llm", "label": "LLM", "x": 40, "y": 260, "config": {"provider": "mock"}},
+    {"id": "n3", "type": "ag_agent", "label": "개발자", "x": 380, "y": 40, "config": {"name": "개발자", "system_message": "당신은 파이썬 개발자다. 요청받은 코드를 작성하고, 리뷰를 반영해 고친다."}},
+    {"id": "n4", "type": "ag_agent", "label": "리뷰어", "x": 380, "y": 220, "config": {"name": "리뷰어", "system_message": "당신은 코드 리뷰어다. 코드를 검토해 개선점을 말하고, 문제가 없으면 TERMINATE 라고 답한다."}},
+    {"id": "n5", "type": "ag_chat", "label": "개발자 ↔ 리뷰어", "x": 740, "y": 100, "config": {"max_turns": 3}},
+    {"id": "n6", "type": "output", "label": "대화 기록", "x": 1100, "y": 100, "config": {"title": "코드 리뷰 대화"}},
+    {"id": "n7", "type": "input", "label": "회의 주제", "x": 40, "y": 520, "config": {"text": "할 일 관리 앱의 핵심 기능 3가지를 정하자", "name": "topic"}},
+    {"id": "n8", "type": "ag_agent", "label": "기획자", "x": 380, "y": 440, "config": {"name": "기획자", "system_message": "당신은 기획자다. 사용자 가치 관점에서 아이디어를 제안한다."}},
+    {"id": "n9", "type": "ag_agent", "label": "엔지니어", "x": 380, "y": 600, "config": {"name": "엔지니어", "system_message": "당신은 엔지니어다. 구현 난이도와 일정을 고려해 의견을 낸다."}},
+    {"id": "n10", "type": "ag_agent", "label": "디자이너", "x": 380, "y": 760, "config": {"name": "디자이너", "system_message": "당신은 디자이너다. 사용성과 화면 흐름 관점에서 의견을 낸다."}},
+    {"id": "n11", "type": "ag_group", "label": "기획 회의", "x": 740, "y": 560, "config": {"max_round": 3, "method": "round_robin"}},
+    {"id": "n12", "type": "output", "label": "회의록", "x": 1100, "y": 560, "config": {"title": "그룹 채팅 회의록"}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n2", "fromPort": "llm", "to": "n3", "toPort": "llm"},
+    {"id": "e2", "from": "n2", "fromPort": "llm", "to": "n4", "toPort": "llm"},
+    {"id": "e3", "from": "n3", "fromPort": "agent", "to": "n5", "toPort": "a"},
+    {"id": "e4", "from": "n4", "fromPort": "agent", "to": "n5", "toPort": "b"},
+    {"id": "e5", "from": "n1", "fromPort": "text", "to": "n5", "toPort": "input"},
+    {"id": "e6", "from": "n5", "fromPort": "transcript", "to": "n6", "toPort": "value"},
+    {"id": "e7", "from": "n2", "fromPort": "llm", "to": "n8", "toPort": "llm"},
+    {"id": "e8", "from": "n2", "fromPort": "llm", "to": "n9", "toPort": "llm"},
+    {"id": "e9", "from": "n2", "fromPort": "llm", "to": "n10", "toPort": "llm"},
+    {"id": "e10", "from": "n8", "fromPort": "agent", "to": "n11", "toPort": "agents"},
+    {"id": "e11", "from": "n9", "fromPort": "agent", "to": "n11", "toPort": "agents"},
+    {"id": "e12", "from": "n10", "fromPort": "agent", "to": "n11", "toPort": "agents"},
+    {"id": "e13", "from": "n7", "fromPort": "text", "to": "n11", "toPort": "input"},
+    {"id": "e14", "from": "n11", "fromPort": "transcript", "to": "n12", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}

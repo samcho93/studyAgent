@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "name": "15 에이전트를 MCP 도구로 · MCP 도구를 쓰는 에이전트",
+  "description": "조사 에이전트를 하나의 도구로 포장해 MCP 서버에 올리고(서버 쪽), MCP 클라이언트 노드로 그 서버에 연결한 비서 에이전트가 원격 도구를 호출한다(클라이언트 쪽). 서버 포트 대신 주소를 넣으면 실제 원격 MCP 서버에 연결된다.",
+  "nodes": [
+    {"id": "n1", "type": "llm", "label": "LLM", "x": 40, "y": 60, "config": {"provider": "mock"}},
+    {"id": "n2", "type": "tool", "label": "위키 검색", "x": 40, "y": 230, "config": {"name": "wiki_search"}},
+    {"id": "n3", "type": "tool", "label": "날씨", "x": 40, "y": 330, "config": {"name": "get_weather"}},
+    {"id": "n4", "type": "agent_tool", "label": "조사 에이전트 → 도구", "x": 380, "y": 120, "config": {"name": "research_agent", "description": "주제를 위키백과에서 조사해 핵심을 정리해 주는 조사 에이전트", "system": "당신은 조사 전문가입니다. 위키 검색 도구로 확인한 정보만으로 핵심 3가지를 정리합니다.", "max_steps": 4}},
+    {"id": "n5", "type": "mcp_server", "label": "조사 MCP 서버", "x": 740, "y": 160, "config": {"name": "research-server", "version": "1.0.0", "instructions": "조사 에이전트와 날씨 도구를 제공합니다.", "transport": "http", "host": "127.0.0.1", "port": 8000}},
+    {"id": "n6", "type": "mcp_client", "label": "MCP 클라이언트", "x": 1100, "y": 160, "config": {"url": "", "key_ref": ""}},
+    {"id": "n7", "type": "input", "label": "질문", "x": 1100, "y": 20, "config": {"text": "서울 날씨 알려줘", "name": "question"}},
+    {"id": "n8", "type": "agent", "label": "비서 (MCP 도구 사용)", "x": 1460, "y": 60, "config": {"system": "당신은 비서입니다. 조사가 필요하면 research_agent 도구를, 날씨는 get_weather 도구를 씁니다.", "max_steps": 5}},
+    {"id": "n9", "type": "output", "label": "답", "x": 1820, "y": 60, "config": {"title": "비서의 답 (MCP 도구 경유)"}},
+    {"id": "n10", "type": "output", "label": "서버 정보", "x": 1460, "y": 300, "config": {"title": "연결된 MCP 서버"}},
+    {"id": "n11", "type": "note", "label": "메모", "x": 740, "y": 420, "config": {"text": "왼쪽 = 서버 쪽 (내보내면 FastMCP 서버)\n오른쪽 = 클라이언트 쪽 (에이전트가 MCP 도구 호출)\n\nMCP 클라이언트의 서버 포트 연결을 끊고 주소(https://…/mcp)를 넣으면 실제 원격 서버에 연결됩니다."}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n1", "fromPort": "llm", "to": "n4", "toPort": "llm"},
+    {"id": "e2", "from": "n2", "fromPort": "tool", "to": "n4", "toPort": "tools"},
+    {"id": "e3", "from": "n4", "fromPort": "tool", "to": "n5", "toPort": "tools"},
+    {"id": "e4", "from": "n3", "fromPort": "tool", "to": "n5", "toPort": "tools"},
+    {"id": "e5", "from": "n5", "fromPort": "server", "to": "n6", "toPort": "server"},
+    {"id": "e6", "from": "n6", "fromPort": "tools", "to": "n8", "toPort": "tools"},
+    {"id": "e7", "from": "n1", "fromPort": "llm", "to": "n8", "toPort": "llm"},
+    {"id": "e8", "from": "n7", "fromPort": "text", "to": "n8", "toPort": "input"},
+    {"id": "e9", "from": "n8", "fromPort": "text", "to": "n9", "toPort": "value"},
+    {"id": "e10", "from": "n6", "fromPort": "info", "to": "n10", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}

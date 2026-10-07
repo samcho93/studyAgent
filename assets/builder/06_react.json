@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "name": "06 ReAct 에이전트 + 파이썬 도구",
+  "description": "Thought → Action → Observation 텍스트 형식의 ReAct 에이전트. 파이썬 함수를 직접 써서 도구로 만든다. (studyAgent 04 · 06차시)",
+  "nodes": [
+    {"id": "n1", "type": "input", "label": "질문", "x": 40, "y": 80, "config": {"text": "AAPL 주가 알려주고 거기에 10을 곱해줘", "name": "question"}},
+    {"id": "n2", "type": "llm", "label": "LLM", "x": 40, "y": 250, "config": {"provider": "mock"}},
+    {"id": "n3", "type": "pytool", "label": "주가 조회 (직접 작성)", "x": 40, "y": 400, "config": {"code": "def get_stock_price(symbol: str) -> dict:\n    \"\"\"주식 종목의 현재 가격을 알려준다 (예시 데이터)\n    symbol: 종목 코드 (예: AAPL)\n    \"\"\"\n    prices = {'AAPL': 189.5, 'MSFT': 415.2, 'TSLA': 248.1}\n    return {'symbol': symbol.upper(), 'price': prices.get(symbol.upper(), 100.0), 'currency': 'USD'}\n"}},
+    {"id": "n4", "type": "tool", "label": "계산기", "x": 40, "y": 700, "config": {"name": "calculator"}},
+    {"id": "n5", "type": "react", "label": "ReAct 에이전트", "x": 440, "y": 200, "config": {"system": "", "max_steps": 6}},
+    {"id": "n6", "type": "output", "label": "답", "x": 820, "y": 160, "config": {"title": "최종 답"}},
+    {"id": "n7", "type": "output", "label": "기록", "x": 820, "y": 340, "config": {"title": "Thought / Action / Observation 기록"}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n1", "fromPort": "text", "to": "n5", "toPort": "input"},
+    {"id": "e2", "from": "n2", "fromPort": "llm", "to": "n5", "toPort": "llm"},
+    {"id": "e3", "from": "n3", "fromPort": "tool", "to": "n5", "toPort": "tools"},
+    {"id": "e4", "from": "n4", "fromPort": "tool", "to": "n5", "toPort": "tools"},
+    {"id": "e5", "from": "n5", "fromPort": "text", "to": "n6", "toPort": "value"},
+    {"id": "e6", "from": "n5", "fromPort": "transcript", "to": "n7", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}

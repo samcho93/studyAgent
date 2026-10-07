@@ -6,7 +6,7 @@
  *   ③ 둘 다 없으면 입력은 미리 받아 두고 실행한다
  */
 (function () {
-  const VERSION = '20261005';
+  const VERSION = '20261007';
   const base = location.href.replace(/[?#].*$/, '').replace(/[^/]*$/, '');
   const enc = new TextEncoder();
 

@@ -7,7 +7,7 @@
 
 각 차시는 `lessons/agNN.js` 파일 하나이며 `PY_COURSE.addChapter({...})` 를 한 번 호출합니다.
 평범한 브라우저 스크립트입니다 (import/export 금지, 전역 변수 금지 → `(function(){ ... })();` 안에서 상수 정의).
-`js/course.js` 의 `order` 에 차시 id(`ag00`~`ag13`), 제목, colab 노트북 이름이 이미 있습니다.
+`js/course.js` 의 `order` 에 차시 id(`ag00`~`ag17`), 제목, colab 노트북 이름이 이미 있습니다. Part 5(ag14~15, agentBuilder)와 Part 6(ag16~17, MCP · Skills)는 `docs/BUILDER_GUIDE.md` 를 함께 봅니다.
 
 ## 1. 구조
 

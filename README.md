@@ -14,8 +14,10 @@ LLM 이 스스로 **계획하고 · 도구를 호출하고 · 기억하고 · �
 - **키가 없어도 동작** — 규칙 기반 **모의 LLM** 이 항상 같은 답을 돌려주므로 모든 예제 · 실습 · 슬라이드가 그대로 돌아갑니다.
 - **미니 프레임워크 `agentlab`** — LLM 추상화 · `@tool` · 에이전트 루프 · 메모리(벡터 저장소) · 미니 LangChain / LangGraph / CrewAI / AutoGen 을 순수 파이썬으로 구현. 실제 프레임워크와 이름을 맞춰 두어 Colab 에서 바로 옮겨 갈 수 있습니다.
 - **Colab 노트북** — 차시별로 실제 LangChain · LangGraph · CrewAI · AutoGen 을 pip 로 설치해 같은 에이전트를 다시 만듭니다.
+- **agentBuilder 연동 (Part 5)** — 배운 구조를 [agentBuilder](https://github.com/samcho93/agentBuilder)(노드 기반 빌더)로 조립 · 실행 · 파이썬으로 내보냅니다.
+- **MCP · Agent Skills (Part 6)** — 도구 서버 표준 MCP(JSON-RPC · FastMCP)와 SKILL.md 기반 Agent Skills 로 에이전트를 확장합니다. 빌더의 실행 엔진(`py/builder`)과 예제 그래프가 강좌 안에서도 그대로 실행됩니다.
 
-## 커리큘럼 (14차시)
+## 커리큘럼 (18차시)
 
 | Part | 차시 | 주제 |
 |---|---|---|
@@ -33,6 +35,10 @@ LLM 이 스스로 **계획하고 · 도구를 호출하고 · 기억하고 · �
 | 4. 프로젝트와 운영 | 11 | 프로젝트 ①: 날씨 · 검색 비서 에이전트 |
 | | 12 | 프로젝트 ②: 마케팅 자동화 에이전트 팀 (조사원 + 작가) |
 | | 13 | 에이전트 평가 · 안전(가드레일) · 배포 |
+| 5. agentBuilder | 14 | agentBuilder 시작하기: 노드 · 그래프 · 실행 · 파이썬 내보내기 |
+| | 15 | agentBuilder 로 다시 만드는 에이전트: 분기 · 반복 · 기억 · 팀 · 가드레일 |
+| 6. MCP · Agent Skills | 16 | MCP(Model Context Protocol): 도구 · 리소스 · 프롬프트 서버 만들고 쓰기 |
+| | 17 | Agent Skills: SKILL.md 로 에이전트에 전문 능력 더하기 |
 
 ## 폴더 구조
 
@@ -40,13 +46,16 @@ LLM 이 스스로 **계획하고 · 도구를 호출하고 · 기억하고 · �
 index.html · student.html · teacher.html · presenter.html   3단 화면 (학생용/교사용/발표자 창)
 js/ css/                 앱 · 슬라이드 · 결과 창 · 파이썬 실행 엔진(Pyodide 워커) · keys.js(🔑 API 키)
 js/course.js             커리큘럼 (차시 순서 · Colab 노트북 이름 · 교사용 비밀번호)
-lessons/ag00~ag13.js     차시 콘텐츠 (문서 블록 · 예제 코드 · 실습 · 퀴즈 · 슬라이드 · 교사 노트)
+lessons/ag00~ag17.js     차시 콘텐츠 (문서 블록 · 예제 코드 · 실습 · 퀴즈 · 슬라이드 · 교사 노트)
 py/agentlab/             강좌용 미니 에이전트 프레임워크 (브라우저 · 로컬 CPython 공용)
+py/builder/ · assets/builder/   agentBuilder 실행 엔진 · 예제 그래프 (원본: agentBuilder, tools/sync_builder.py 로 동기화)
+img/builder/             agentBuilder 튜토리얼 캡처
 py/                      브라우저 파이썬 실행기 (_runtime · _mlrich 등)
 notebooks/               Colab 학생용 노트북 · notebooks/solutions/ 정답 노트북
 tools/nb_src/            노트북 소스 (python tools/build_notebooks.py 로 학생용/정답 생성)
 tools/validate.js        차시 검증 (모든 예제 코드를 오프라인 모의 LLM 으로 실행 + 출력 비교)
 docs/LESSON_GUIDE.md     차시 작성 가이드 · agentlab API 요약
+docs/BUILDER_GUIDE.md    Part 5(agentBuilder) 작성 가이드 · 노드 카탈로그
 ```
 
 ## agentlab 한눈에

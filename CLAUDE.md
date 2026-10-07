@@ -9,9 +9,9 @@
 | 교과목명 | AI 에이전트 구축: 파이썬으로 만드는 LLM 에이전트 |
 | 사이트 명 | **AI Agent Lab** |
 | 배포 URL | `https://samcho93.github.io/studyAgent` |
-| 기간 | 14차시 (차시당 2~3교시 × 50분) |
+| 기간 | 18차시 (차시당 2~3교시 × 50분) — Part 5(14~15) agentBuilder · Part 6(16~17) MCP · Agent Skills |
 | 언어 | 한국어 (코드 주석·변수명은 영어) |
-| 시리즈 | ① studyMLBasic → ② MLStudio → ③ studyLLM → ④ studyRAG → ⑤ **studyAgent (이 과정)** → ⑥ studyOntology |
+| 시리즈 | ① studyMLBasic → ② MLStudio → ③ studyLLM → ④ studyRAG → ⑤ **studyAgent (이 과정)** → ⑥ studyOntology · 도구: agentBuilder(Part 5 · 6) |
 
 학습 흐름: **원리를 브라우저에서 직접 구현(agentlab)** → **실제 프레임워크(LangChain · LangGraph · CrewAI · AutoGen)를 Colab 에서 사용** → **프로젝트 2개**(비서 에이전트 · 마케팅 에이전트 팀).
 
@@ -31,6 +31,8 @@ index.html · student.html · teacher.html · presenter.html
 js/   app.js(화면) · slides.js · runner.js · py-engine.js · py-worker.js(Pyodide) · keys.js(🔑) · course.js(커리큘럼)
 css/  style.css · slides.css · gui.css
 py/agentlab/  llm.py(공급자 추상화) · mock.py(모의 LLM) · tools.py · memory.py · agent.py · chain.py · graph.py · crew.py · autogen.py
+py/builder/   agentBuilder 실행 엔진 복사본 (nodes · engine · export · providers · mcp · skills) — 원본은 ../agentBuilder, 여기서 고치지 말고 tools/sync_builder.py 로 동기화
+assets/builder/*.json  빌더 예제 그래프 (작업 폴더에 builder/ 로 복사됨) · img/builder/ 튜토리얼 캡처 · docs/BUILDER_GUIDE.md Part 5 작성 가이드
 lessons/agNN.js   차시 콘텐츠 — 작성 규칙은 docs/LESSON_GUIDE.md
 tools/nb_src/*.py → python tools/build_notebooks.py → notebooks/*.ipynb (Colab)
 tools/validate.js 검증
@@ -41,5 +43,6 @@ tools/validate.js 검증
 - 새 차시: `docs/LESSON_GUIDE.md` 와 완성된 `lessons/ag01.js` 를 먼저 읽고 같은 구조로 작성 → `node tools/validate.js agNN --print` 로 출력 확인 후 `expect` 작성 → 오류 0
 - agentlab 을 고치면 `WEBGUI_VALIDATE=1 PYTHONPATH=py python` 으로 오프라인 동작을 확인하고, 영향을 받는 차시를 다시 검증한다
 - 모의 LLM(mock.py)의 규칙을 바꾸면 모든 차시의 expect 가 바뀔 수 있다 → `node tools/validate.js all`
+- agentlab 을 바꾸면 agentBuilder 의 py/agentlab 과 동기화한다 (두 저장소는 같은 파일을 유지)
 - 로컬 확인: `python server/serve.py` → http://localhost:8080/
 - 커밋 메시지: `feat(ag04): 도구 호출 차시 추가` 형식. 작업 중간에도 자주 커밋 · 푸시한다

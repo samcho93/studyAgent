@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "name": "08 상태 그래프: 분기와 반복",
+  "description": "조건 분기로 질문 유형에 따라 다른 가지를 타고, 평가 점수가 낮으면 되돌아가 다시 쓰는 LangGraph 식 상태 그래프. (studyAgent 06 · 08차시)",
+  "nodes": [
+    {"id": "n1", "type": "input", "label": "요청", "x": 40, "y": 200, "config": {"text": "AI 에이전트를 소개하는 블로그 글을 써줘", "name": "request"}},
+    {"id": "n2", "type": "llm", "label": "LLM", "x": 40, "y": 380, "config": {"provider": "mock"}},
+    {"id": "n3", "type": "router", "label": "요청 분류", "x": 360, "y": 140, "config": {"mode": "keyword", "routes": [{"label": "글쓰기", "keywords": "글, 블로그, 작성, 써"}, {"label": "번역", "keywords": "번역, translate"}], "default_label": "일반"}},
+    {"id": "n4", "type": "chat", "label": "초안 작성", "x": 700, "y": 60, "config": {"system": "당신은 블로그 작가입니다.", "prompt": "{input}\n\n[이전 피드백]\n{context}"}},
+    {"id": "n5", "type": "judge", "label": "품질 평가", "x": 1040, "y": 60, "config": {"criteria": "명확성 · 구체성 · 흥미"}},
+    {"id": "n6", "type": "router", "label": "통과?", "x": 1380, "y": 60, "config": {"mode": "python", "routes": [{"label": "통과", "keywords": ""}, {"label": "다시", "keywords": ""}], "default_label": "기타", "expr": "'통과' if (json.loads(text).get('score') or 0) >= 7 else '다시'"}},
+    {"id": "n7", "type": "chat", "label": "번역", "x": 700, "y": 330, "config": {"system": "당신은 번역가입니다. 영어로 번역합니다.", "prompt": "{input}"}},
+    {"id": "n8", "type": "chat", "label": "일반 답변", "x": 700, "y": 500, "config": {"system": "당신은 비서입니다.", "prompt": "{input}"}},
+    {"id": "n9", "type": "merge", "label": "합류", "x": 1380, "y": 400, "config": {"mode": "first"}},
+    {"id": "n10", "type": "output", "label": "결과", "x": 1700, "y": 400, "config": {"title": "최종 결과"}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n1", "fromPort": "text", "to": "n3", "toPort": "input"},
+    {"id": "e2", "from": "n3", "fromPort": "글쓰기", "to": "n4", "toPort": "input"},
+    {"id": "e3", "from": "n2", "fromPort": "llm", "to": "n4", "toPort": "llm"},
+    {"id": "e4", "from": "n4", "fromPort": "text", "to": "n5", "toPort": "input"},
+    {"id": "e5", "from": "n2", "fromPort": "llm", "to": "n5", "toPort": "llm"},
+    {"id": "e6", "from": "n5", "fromPort": "text", "to": "n6", "toPort": "input"},
+    {"id": "e7", "from": "n6", "fromPort": "다시", "to": "n4", "toPort": "context"},
+    {"id": "e8", "from": "n3", "fromPort": "번역", "to": "n7", "toPort": "input"},
+    {"id": "e9", "from": "n2", "fromPort": "llm", "to": "n7", "toPort": "llm"},
+    {"id": "e10", "from": "n3", "fromPort": "__default__", "to": "n8", "toPort": "input"},
+    {"id": "e11", "from": "n2", "fromPort": "llm", "to": "n8", "toPort": "llm"},
+    {"id": "e12", "from": "n4", "fromPort": "text", "to": "n9", "toPort": "values"},
+    {"id": "e13", "from": "n7", "fromPort": "text", "to": "n9", "toPort": "values"},
+    {"id": "e14", "from": "n8", "fromPort": "text", "to": "n9", "toPort": "values"},
+    {"id": "e15", "from": "n9", "fromPort": "text", "to": "n10", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 3}
+}

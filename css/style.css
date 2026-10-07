@@ -307,6 +307,8 @@ kbd { font-size: .82em; padding: 1px 6px; border: 1px solid var(--line); border-
 /* 그림 */
 .figure { margin: 18px 0; padding: 16px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow-x: auto; }
 .figure svg { width: 100%; height: auto; display: block; font-family: var(--sans); }
+.figure img { max-width: 100%; height: auto; display: block; margin: 0 auto; border: 1px solid var(--line); border-radius: 8px; }
+.figure.shot { padding: 8px; }
 .figure svg text:not([fill]) { fill: var(--fg); }
 .figure .caption { margin: 8px 0 0; }
 

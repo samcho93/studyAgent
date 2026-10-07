@@ -12,7 +12,8 @@ const PY_FILES = [
   'pygame/__init__.py', 'pygame/constants.py', 'pygame/locals.py', 'pygame/sprite.py', 'pygame/math.py',
   '_mlrich.py',
   'agentlab/__init__.py', 'agentlab/_http.py', 'agentlab/llm.py', 'agentlab/mock.py', 'agentlab/tools.py', 'agentlab/memory.py',
-  'agentlab/agent.py', 'agentlab/chain.py', 'agentlab/graph.py', 'agentlab/crew.py', 'agentlab/autogen.py'
+  'agentlab/agent.py', 'agentlab/chain.py', 'agentlab/graph.py', 'agentlab/crew.py', 'agentlab/autogen.py',
+  'builder/__init__.py', 'builder/nodes.py', 'builder/engine.py', 'builder/export.py', 'builder/providers.py', 'builder/mcp.py', 'builder/skills.py'
 ];
 // import 이름 → Pyodide 패키지
 const PACKAGES = {
@@ -221,7 +222,7 @@ async function init(m) {
   // 강좌용 모듈(tkinter · turtle · pygame 호환) 설치
   const FS = py.FS;
   const mkdirs = (p) => { let cur = ''; for (const part of p.split('/').filter(Boolean)) { cur += '/' + part; try { FS.mkdir(cur); } catch (e) { /* 있음 */ } } };
-  mkdirs(LIB + '/tkinter'); mkdirs(LIB + '/pygame'); mkdirs(LIB + '/agentlab'); mkdirs(WORK);
+  mkdirs(LIB + '/tkinter'); mkdirs(LIB + '/pygame'); mkdirs(LIB + '/agentlab'); mkdirs(LIB + '/builder'); mkdirs(WORK);
   const ver = m.version || '';
   await Promise.all(PY_FILES.map(async (f) => {
     const r = await fetch(`${base}py/${f}?v=${ver}`, { cache: 'no-cache' });

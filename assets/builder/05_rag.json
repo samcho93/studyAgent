@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "name": "05 문서 검색 (RAG)",
+  "description": "문서를 벡터 저장소에 넣고 질문과 비슷한 부분을 찾아 LLM 에게 참고로 넘긴다 (검색 증강 생성). (studyAgent 05차시 장기 기억)",
+  "nodes": [
+    {"id": "n1", "type": "input", "label": "질문", "x": 40, "y": 140, "config": {"text": "재택근무는 일주일에 며칠까지 할 수 있어?", "name": "question"}},
+    {"id": "n2", "type": "llm", "label": "LLM", "x": 40, "y": 320, "config": {"provider": "mock"}},
+    {"id": "n3", "type": "vectorstore", "label": "사내 규정 문서", "x": 400, "y": 60, "config": {"documents": "우리 회사의 연차는 1년에 15일이며 입사 1년 미만은 월 1일씩 생긴다.\n\n점심 시간은 12시부터 1시까지이며 식대는 월 15만원까지 지원한다.\n\n재택근무는 주 2회까지 가능하며 전날 팀장 승인이 필요하다.\n\n출장비는 영수증을 첨부해 다음 달 10일까지 정산 시스템에 올린다.", "k": 2}},
+    {"id": "n4", "type": "chat", "label": "근거 있는 답변", "x": 780, "y": 160, "config": {"system": "당신은 사내 규정 안내 봇입니다. 반드시 [참고 문서]에 있는 내용으로만 답하고, 없으면 모른다고 말합니다.", "prompt": "[참고 문서]\n{context}\n\n[질문]\n{input}"}},
+    {"id": "n5", "type": "output", "label": "답", "x": 1140, "y": 160, "config": {"title": "답변"}},
+    {"id": "n6", "type": "output", "label": "검색 결과", "x": 780, "y": 400, "config": {"title": "찾은 문맥 (상위 2개)"}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n1", "fromPort": "text", "to": "n3", "toPort": "query"},
+    {"id": "e2", "from": "n1", "fromPort": "text", "to": "n4", "toPort": "input"},
+    {"id": "e3", "from": "n3", "fromPort": "context", "to": "n4", "toPort": "context"},
+    {"id": "e4", "from": "n2", "fromPort": "llm", "to": "n4", "toPort": "llm"},
+    {"id": "e5", "from": "n4", "fromPort": "text", "to": "n5", "toPort": "value"},
+    {"id": "e6", "from": "n3", "fromPort": "hits", "to": "n6", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}

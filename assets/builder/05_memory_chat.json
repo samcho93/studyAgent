@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "name": "05 기억하는 챗봇",
+  "description": "대화 기억 노드를 에이전트에 연결하면 ▶ 실행을 반복해도 이전 대화를 기억한다. 1) '내 이름은 영준이야' 2) '내 이름이 뭐지?' 순서로 실행해 보세요. (studyAgent 05차시)",
+  "nodes": [
+    {"id": "n1", "type": "input", "label": "메시지", "x": 40, "y": 120, "config": {"text": "내 이름은 영준이야. 기억해줘", "name": "message"}},
+    {"id": "n2", "type": "llm", "label": "LLM", "x": 40, "y": 290, "config": {"provider": "mock"}},
+    {"id": "n3", "type": "memory", "label": "대화 기억", "x": 40, "y": 440, "config": {"kind": "conversation", "window": 8}},
+    {"id": "n4", "type": "tool", "label": "현재 시각", "x": 40, "y": 580, "config": {"name": "now"}},
+    {"id": "n5", "type": "agent", "label": "챗봇", "x": 420, "y": 200, "config": {"system": "당신은 친근한 챗봇입니다. 사용자가 알려 준 정보를 기억해 대화합니다.", "max_steps": 4}},
+    {"id": "n6", "type": "output", "label": "답", "x": 800, "y": 220, "config": {"title": "챗봇의 답"}},
+    {"id": "n7", "type": "note", "label": "메모", "x": 420, "y": 40, "config": {"text": "실행 패널의 입력을 바꿔 가며 여러 번 실행하세요.\n🧹 기억 지우기를 누르면 처음부터 시작합니다."}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n1", "fromPort": "text", "to": "n5", "toPort": "input"},
+    {"id": "e2", "from": "n2", "fromPort": "llm", "to": "n5", "toPort": "llm"},
+    {"id": "e3", "from": "n3", "fromPort": "memory", "to": "n5", "toPort": "memory"},
+    {"id": "e4", "from": "n4", "fromPort": "tool", "to": "n5", "toPort": "tools"},
+    {"id": "e5", "from": "n5", "fromPort": "text", "to": "n6", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}

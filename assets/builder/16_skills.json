@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "name": "16 스킬을 가진 비서",
+  "description": "보고서 작성 · 데이터 정리 스킬과 SKILL.md 로 가져온 회의록 스킬을 가진 비서. 작업에 맞는 스킬이 선택되어 지시문과 도구가 활성화된다(점진적 로딩). 입력을 '회의 내용 정리해줘' 로 바꿔 실행해 보세요.",
+  "nodes": [
+    {"id": "n1", "type": "input", "label": "작업", "x": 40, "y": 40, "config": {"text": "이번 분기 매출 데이터(1월 120, 2월 135, 3월 150)를 정리해서 보고서 초안을 써줘", "name": "task"}},
+    {"id": "n2", "type": "llm", "label": "LLM", "x": 40, "y": 220, "config": {"provider": "mock"}},
+    {"id": "n3", "type": "tool", "label": "계산기", "x": 40, "y": 380, "config": {"name": "calculator"}},
+    {"id": "n4", "type": "skill", "label": "보고서 작성 스킬", "x": 380, "y": 40, "config": {"name": "report-writer", "description": "보고서 · 요약문 · 리포트 작성 요청에 사용한다", "keywords": "보고서, 요약, 리포트", "instructions": "# 보고서 작성\n1. 제목 · 요약(3줄) · 본문 · 다음 행동 순서로 쓴다.\n2. 숫자는 표로 정리하고 출처를 적는다.\n3. 전문 용어는 처음 나올 때 풀어 쓴다.", "references": "보고서 톤: 간결한 경어체. 한 문단은 4문장 이내."}},
+    {"id": "n5", "type": "skill", "label": "데이터 정리 스킬", "x": 380, "y": 320, "config": {"name": "data-cleaner", "description": "숫자 데이터 정리 · 합계 · 평균 · 증감률 계산 요청에 사용한다", "keywords": "데이터, 합계, 평균, 증감, 매출, 숫자", "instructions": "# 데이터 정리\n1. 숫자를 표로 정리한다 (항목 | 값).\n2. 합계 · 평균 · 전월 대비 증감률은 반드시 계산기 도구로 계산한다.\n3. 계산 근거(식)를 함께 적는다.", "references": ""}},
+    {"id": "n6", "type": "skill_import", "label": "SKILL.md 가져오기", "x": 380, "y": 600, "config": {"md": "---\nname: meeting-notes\ndescription: 회의록 · 회의 내용 정리 요청에 사용. 결정 사항 · 할 일 · 담당자를 표로 정리한다\nkeywords: 회의, 회의록, 미팅\n---\n# 회의록 정리\n\n1. 먼저 결정 사항을 번호 목록으로 쓴다.\n2. 할 일(Action Item)은 표로: | 할 일 | 담당자 | 기한 |\n3. 마지막에 다음 회의 안건을 한 줄로 제안한다.\n"}},
+    {"id": "n7", "type": "agent", "label": "스킬 비서", "x": 780, "y": 160, "config": {"system": "당신은 비서입니다. 활성화된 스킬의 지시를 그대로 따릅니다.", "max_steps": 5}},
+    {"id": "n8", "type": "output", "label": "답", "x": 1160, "y": 160, "config": {"title": "비서의 답"}},
+    {"id": "n9", "type": "skill_prompt", "label": "스킬 선택 · 프롬프트 조립", "x": 780, "y": 460, "config": {"base_system": "당신은 비서입니다.", "mode": "auto"}},
+    {"id": "n10", "type": "output", "label": "조립된 프롬프트", "x": 1160, "y": 420, "config": {"title": "조립된 시스템 프롬프트 (1단계 목록 + 2단계 지시문)"}},
+    {"id": "n11", "type": "output", "label": "선택된 스킬", "x": 1160, "y": 620, "config": {"title": "선택된 스킬"}},
+    {"id": "n12", "type": "note", "label": "메모", "x": 780, "y": 20, "config": {"text": "스킬 = SKILL.md(이름 · 설명 · 지시문) + 참고 자료 + 도구\n1단계: 이름 · 설명만 보고 → 2단계: 맞는 스킬의 지시문 · 도구 활성화\n📁 SKILL.md 버튼으로 폴더 형식 내보내기"}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n3", "fromPort": "tool", "to": "n5", "toPort": "tools"},
+    {"id": "e2", "from": "n2", "fromPort": "llm", "to": "n7", "toPort": "llm"},
+    {"id": "e3", "from": "n1", "fromPort": "text", "to": "n7", "toPort": "input"},
+    {"id": "e4", "from": "n4", "fromPort": "skill", "to": "n7", "toPort": "skills"},
+    {"id": "e5", "from": "n5", "fromPort": "skill", "to": "n7", "toPort": "skills"},
+    {"id": "e6", "from": "n6", "fromPort": "skill", "to": "n7", "toPort": "skills"},
+    {"id": "e7", "from": "n7", "fromPort": "text", "to": "n8", "toPort": "value"},
+    {"id": "e8", "from": "n4", "fromPort": "skill", "to": "n9", "toPort": "skills"},
+    {"id": "e9", "from": "n5", "fromPort": "skill", "to": "n9", "toPort": "skills"},
+    {"id": "e10", "from": "n6", "fromPort": "skill", "to": "n9", "toPort": "skills"},
+    {"id": "e11", "from": "n1", "fromPort": "text", "to": "n9", "toPort": "input"},
+    {"id": "e12", "from": "n2", "fromPort": "llm", "to": "n9", "toPort": "llm"},
+    {"id": "e13", "from": "n9", "fromPort": "system", "to": "n10", "toPort": "value"},
+    {"id": "e14", "from": "n9", "fromPort": "selected", "to": "n11", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}

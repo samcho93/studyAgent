@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "name": "01 첫 LLM 호출",
+  "description": "입력 → LLM 호출 → 결과. 가장 단순한 그래프로 빌더 사용법과 API 키 설정을 익힌다. (studyAgent 02차시 LLM API)",
+  "nodes": [
+    {"id": "n1", "type": "input", "label": "질문", "x": 60, "y": 160, "config": {"text": "AI 에이전트가 뭔지 한 문장으로 설명해줘", "name": "question"}},
+    {"id": "n2", "type": "llm", "label": "LLM", "x": 60, "y": 330, "config": {"provider": "mock", "model": "", "key_ref": "", "temperature": 0}},
+    {"id": "n3", "type": "chat", "label": "답변 생성", "x": 400, "y": 200, "config": {"system": "당신은 친절한 AI 선생님입니다. 쉬운 말로 설명합니다.", "prompt": "{input}", "json_mode": false}},
+    {"id": "n4", "type": "output", "label": "결과", "x": 760, "y": 220, "config": {"title": "답변"}},
+    {"id": "n5", "type": "note", "label": "메모", "x": 400, "y": 40, "config": {"text": "① 시작 입력에 질문을 쓰고\n② LLM 모델 노드에서 공급자 · 키를 고른 뒤\n③ ▶ 실행을 누르세요. 키가 없으면 모의 LLM 이 답합니다."}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n1", "fromPort": "text", "to": "n3", "toPort": "input"},
+    {"id": "e2", "from": "n2", "fromPort": "llm", "to": "n3", "toPort": "llm"},
+    {"id": "e3", "from": "n3", "fromPort": "text", "to": "n4", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}

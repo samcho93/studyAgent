@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "name": "11 종합: 비서 에이전트",
+  "description": "질문 유형을 분류해 날씨·검색은 도구 에이전트가, 사내 규정은 RAG 가, 나머지는 기억을 가진 챗봇이 답한다. 모든 가지가 합류해 하나의 답이 된다. (studyAgent 11차시 프로젝트 ①)",
+  "nodes": [
+    {"id": "n1", "type": "input", "label": "질문", "x": 40, "y": 220, "config": {"text": "내일 부산 날씨 어때? 우산 챙겨야 해?", "name": "question"}},
+    {"id": "n2", "type": "llm", "label": "LLM", "x": 40, "y": 400, "config": {"provider": "mock"}},
+    {"id": "n3", "type": "router", "label": "질문 분류", "x": 360, "y": 160, "config": {"mode": "keyword", "routes": [{"label": "날씨·검색", "keywords": "날씨, 기온, 우산, 검색, 알아봐, 위키, 계산"}, {"label": "사내규정", "keywords": "연차, 재택, 점심, 출장, 규정"}], "default_label": "일반 대화"}},
+    {"id": "n4", "type": "tool", "label": "날씨", "x": 360, "y": 420, "config": {"name": "get_weather"}},
+    {"id": "n5", "type": "tool", "label": "위키", "x": 360, "y": 520, "config": {"name": "wiki_search"}},
+    {"id": "n6", "type": "tool", "label": "계산기", "x": 360, "y": 620, "config": {"name": "calculator"}},
+    {"id": "n7", "type": "agent", "label": "정보 비서", "x": 720, "y": 40, "config": {"system": "당신은 날씨 · 검색 비서입니다. 도구로 확인한 정보로만 짧고 정확하게 답합니다.", "max_steps": 6}},
+    {"id": "n8", "type": "vectorstore", "label": "사내 규정", "x": 720, "y": 330, "config": {"documents": "연차는 1년에 15일이다.\n\n재택근무는 주 2회까지 가능하며 팀장 승인이 필요하다.\n\n점심 시간은 12시부터 1시까지다.", "k": 2}},
+    {"id": "n9", "type": "chat", "label": "규정 안내", "x": 1060, "y": 330, "config": {"system": "당신은 사내 규정 안내 봇입니다. [참고]에 있는 내용으로만 답합니다.", "prompt": "[참고]\n{context}\n\n[질문]\n{input}"}},
+    {"id": "n10", "type": "memory", "label": "대화 기억", "x": 720, "y": 700, "config": {"kind": "conversation", "window": 8}},
+    {"id": "n11", "type": "agent", "label": "일상 챗봇", "x": 1060, "y": 600, "config": {"system": "당신은 친근한 비서입니다. 사용자가 말한 내용을 기억하며 대화합니다.", "max_steps": 3}},
+    {"id": "n12", "type": "merge", "label": "합류", "x": 1420, "y": 330, "config": {"mode": "first"}},
+    {"id": "n13", "type": "output", "label": "답", "x": 1760, "y": 330, "config": {"title": "비서의 답"}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n1", "fromPort": "text", "to": "n3", "toPort": "input"},
+    {"id": "e2", "from": "n3", "fromPort": "날씨·검색", "to": "n7", "toPort": "input"},
+    {"id": "e3", "from": "n2", "fromPort": "llm", "to": "n7", "toPort": "llm"},
+    {"id": "e4", "from": "n4", "fromPort": "tool", "to": "n7", "toPort": "tools"},
+    {"id": "e5", "from": "n5", "fromPort": "tool", "to": "n7", "toPort": "tools"},
+    {"id": "e6", "from": "n6", "fromPort": "tool", "to": "n7", "toPort": "tools"},
+    {"id": "e7", "from": "n3", "fromPort": "사내규정", "to": "n8", "toPort": "query"},
+    {"id": "e8", "from": "n3", "fromPort": "사내규정", "to": "n9", "toPort": "input"},
+    {"id": "e9", "from": "n8", "fromPort": "context", "to": "n9", "toPort": "context"},
+    {"id": "e10", "from": "n2", "fromPort": "llm", "to": "n9", "toPort": "llm"},
+    {"id": "e11", "from": "n3", "fromPort": "__default__", "to": "n11", "toPort": "input"},
+    {"id": "e12", "from": "n2", "fromPort": "llm", "to": "n11", "toPort": "llm"},
+    {"id": "e13", "from": "n10", "fromPort": "memory", "to": "n11", "toPort": "memory"},
+    {"id": "e14", "from": "n7", "fromPort": "text", "to": "n12", "toPort": "values"},
+    {"id": "e15", "from": "n9", "fromPort": "text", "to": "n12", "toPort": "values"},
+    {"id": "e16", "from": "n11", "fromPort": "text", "to": "n12", "toPort": "values"},
+    {"id": "e17", "from": "n12", "fromPort": "text", "to": "n13", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}

@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "name": "06 계획 · 초안 · 반성",
+  "description": "목표를 단계로 쪼개고(Plan), 초안을 쓴 뒤, 비평·수정을 반복(Reflection)하고, 마지막에 LLM 심사로 점수를 매긴다. (studyAgent 06차시)",
+  "nodes": [
+    {"id": "n1", "type": "input", "label": "목표", "x": 40, "y": 160, "config": {"text": "신입 개발자를 위한 '좋은 커밋 메시지 쓰는 법' 블로그 글 작성", "name": "goal"}},
+    {"id": "n2", "type": "llm", "label": "LLM", "x": 40, "y": 340, "config": {"provider": "mock"}},
+    {"id": "n3", "type": "planner", "label": "계획", "x": 380, "y": 60, "config": {"max_steps": 4}},
+    {"id": "n4", "type": "template", "label": "초안 프롬프트", "x": 700, "y": 60, "config": {"template": "목표: {goal}\n\n다음 계획에 따라 블로그 글 초안을 써줘:\n{plan}"}},
+    {"id": "n5", "type": "chat", "label": "초안 작성", "x": 1020, "y": 60, "config": {"system": "당신은 기술 블로그 작가입니다.", "prompt": "{input}"}},
+    {"id": "n6", "type": "reflector", "label": "비평 · 수정", "x": 1340, "y": 60, "config": {"rounds": 1, "criteria": "구체적인 예시 · 명확한 구조 · 신입에게 친절한 설명"}},
+    {"id": "n7", "type": "judge", "label": "최종 평가", "x": 1660, "y": 200, "config": {"criteria": "명확성 · 구체성 · 실용성"}},
+    {"id": "n8", "type": "output", "label": "최종 글", "x": 1660, "y": 20, "config": {"title": "수정된 최종 글"}},
+    {"id": "n9", "type": "output", "label": "점수", "x": 1980, "y": 200, "config": {"title": "평가 (LLM 심사)"}},
+    {"id": "n10", "type": "output", "label": "계획", "x": 380, "y": 300, "config": {"title": "세운 계획"}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n1", "fromPort": "text", "to": "n3", "toPort": "input"},
+    {"id": "e2", "from": "n2", "fromPort": "llm", "to": "n3", "toPort": "llm"},
+    {"id": "e3", "from": "n1", "fromPort": "text", "to": "n4", "toPort": "goal"},
+    {"id": "e4", "from": "n3", "fromPort": "text", "to": "n4", "toPort": "plan"},
+    {"id": "e5", "from": "n4", "fromPort": "text", "to": "n5", "toPort": "input"},
+    {"id": "e6", "from": "n2", "fromPort": "llm", "to": "n5", "toPort": "llm"},
+    {"id": "e7", "from": "n5", "fromPort": "text", "to": "n6", "toPort": "input"},
+    {"id": "e8", "from": "n2", "fromPort": "llm", "to": "n6", "toPort": "llm"},
+    {"id": "e9", "from": "n6", "fromPort": "text", "to": "n7", "toPort": "input"},
+    {"id": "e10", "from": "n2", "fromPort": "llm", "to": "n7", "toPort": "llm"},
+    {"id": "e11", "from": "n6", "fromPort": "text", "to": "n8", "toPort": "value"},
+    {"id": "e12", "from": "n7", "fromPort": "report", "to": "n9", "toPort": "value"},
+    {"id": "e13", "from": "n3", "fromPort": "text", "to": "n10", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}

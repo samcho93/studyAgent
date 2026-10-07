@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "name": "04 도구 호출 에이전트",
+  "description": "LLM 이 날씨 · 계산기 · 위키 도구를 골라 호출하고 결과를 보고 답하는 에이전트 루프. (studyAgent 04차시 Tool Calling · 11차시 비서 프로젝트)",
+  "nodes": [
+    {"id": "n1", "type": "input", "label": "질문", "x": 40, "y": 60, "config": {"text": "서울 날씨 알려주고 기온에 1.8을 곱해줘", "name": "question"}},
+    {"id": "n2", "type": "llm", "label": "LLM", "x": 40, "y": 230, "config": {"provider": "mock", "model": "", "key_ref": ""}},
+    {"id": "n3", "type": "tool", "label": "날씨", "x": 40, "y": 400, "config": {"name": "get_weather"}},
+    {"id": "n4", "type": "tool", "label": "계산기", "x": 40, "y": 500, "config": {"name": "calculator"}},
+    {"id": "n5", "type": "tool", "label": "위키 검색", "x": 40, "y": 600, "config": {"name": "wiki_search"}},
+    {"id": "n6", "type": "agent", "label": "비서 에이전트", "x": 420, "y": 200, "config": {"system": "당신은 날씨 · 검색 비서입니다. 도구를 써서 확인한 정보로만 답하고, 짧고 정확하게 말합니다.", "max_steps": 6}},
+    {"id": "n7", "type": "output", "label": "결과", "x": 800, "y": 200, "config": {"title": "비서의 답"}},
+    {"id": "n8", "type": "output", "label": "단계 기록", "x": 800, "y": 360, "config": {"title": "에이전트 단계 (생각 → 도구 → 관찰)"}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n1", "fromPort": "text", "to": "n6", "toPort": "input"},
+    {"id": "e2", "from": "n2", "fromPort": "llm", "to": "n6", "toPort": "llm"},
+    {"id": "e3", "from": "n3", "fromPort": "tool", "to": "n6", "toPort": "tools"},
+    {"id": "e4", "from": "n4", "fromPort": "tool", "to": "n6", "toPort": "tools"},
+    {"id": "e5", "from": "n5", "fromPort": "tool", "to": "n6", "toPort": "tools"},
+    {"id": "e6", "from": "n6", "fromPort": "text", "to": "n7", "toPort": "value"},
+    {"id": "e7", "from": "n6", "fromPort": "trace", "to": "n8", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}

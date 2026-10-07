@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "name": "13 가드레일 · 평가",
+  "description": "입력 가드(금지어 검사) → 에이전트 → 출력 가드 → LLM 심사 점수. 차단되면 안내 메시지로 합류한다. (studyAgent 13차시 안전 · 평가)",
+  "nodes": [
+    {"id": "n1", "type": "input", "label": "사용자 입력", "x": 40, "y": 160, "config": {"text": "서울 날씨 알려줘", "name": "question"}},
+    {"id": "n2", "type": "llm", "label": "LLM", "x": 40, "y": 340, "config": {"provider": "mock"}},
+    {"id": "n3", "type": "guard", "label": "입력 가드", "x": 360, "y": 120, "config": {"banned": "비밀번호, 주민번호, 해킹", "max_len": 500, "message": "죄송합니다. 개인정보나 보안 관련 요청은 처리할 수 없습니다."}},
+    {"id": "n4", "type": "tool", "label": "날씨", "x": 360, "y": 420, "config": {"name": "get_weather"}},
+    {"id": "n5", "type": "agent", "label": "비서", "x": 700, "y": 120, "config": {"system": "당신은 비서입니다. 도구로 확인한 정보로 짧게 답합니다.", "max_steps": 5}},
+    {"id": "n6", "type": "guard", "label": "출력 가드", "x": 1040, "y": 120, "config": {"banned": "바보, 멍청", "max_len": 1000, "message": "답변이 안전 기준에 맞지 않아 표시할 수 없습니다."}},
+    {"id": "n7", "type": "merge", "label": "합류", "x": 1380, "y": 220, "config": {"mode": "first"}},
+    {"id": "n8", "type": "output", "label": "최종 답", "x": 1720, "y": 220, "config": {"title": "최종 답"}},
+    {"id": "n9", "type": "judge", "label": "품질 심사", "x": 1380, "y": 440, "config": {"criteria": "정확성 · 간결성 · 안전성"}},
+    {"id": "n10", "type": "output", "label": "점수", "x": 1720, "y": 440, "config": {"title": "LLM 심사 점수"}},
+    {"id": "n11", "type": "note", "label": "메모", "x": 700, "y": 400, "config": {"text": "실행 입력을 '내 비밀번호 알려줘' 로 바꿔 실행하면 입력 가드가 차단하고, 에이전트는 건너뜁니다."}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n1", "fromPort": "text", "to": "n3", "toPort": "input"},
+    {"id": "e2", "from": "n3", "fromPort": "pass", "to": "n5", "toPort": "input"},
+    {"id": "e3", "from": "n2", "fromPort": "llm", "to": "n5", "toPort": "llm"},
+    {"id": "e4", "from": "n4", "fromPort": "tool", "to": "n5", "toPort": "tools"},
+    {"id": "e5", "from": "n5", "fromPort": "text", "to": "n6", "toPort": "input"},
+    {"id": "e6", "from": "n6", "fromPort": "pass", "to": "n7", "toPort": "values"},
+    {"id": "e7", "from": "n6", "fromPort": "blocked", "to": "n7", "toPort": "values"},
+    {"id": "e8", "from": "n3", "fromPort": "blocked", "to": "n7", "toPort": "values"},
+    {"id": "e9", "from": "n7", "fromPort": "text", "to": "n8", "toPort": "value"},
+    {"id": "e10", "from": "n6", "fromPort": "pass", "to": "n9", "toPort": "input"},
+    {"id": "e11", "from": "n2", "fromPort": "llm", "to": "n9", "toPort": "llm"},
+    {"id": "e12", "from": "n9", "fromPort": "report", "to": "n10", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}

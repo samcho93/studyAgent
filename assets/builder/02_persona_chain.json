@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "name": "02 역할 · 체인 · 구조화 출력",
+  "description": "프롬프트 템플릿으로 입력을 감싸고, 역할이 다른 두 LLM 호출을 이어 붙인 체인. 마지막은 JSON 으로 감성 분류. (studyAgent 02 · 03 · 07차시)",
+  "nodes": [
+    {"id": "n1", "type": "input", "label": "고객 리뷰", "x": 40, "y": 160, "config": {"text": "배송은 빨랐는데 포장이 찢어져서 왔어요. 제품 자체는 괜찮습니다.", "name": "review"}},
+    {"id": "n2", "type": "llm", "label": "LLM", "x": 40, "y": 340, "config": {"provider": "mock"}},
+    {"id": "n3", "type": "template", "label": "요약 프롬프트", "x": 360, "y": 60, "config": {"template": "다음 고객 리뷰를 한 문장으로 요약해줘:\n\n{review}"}},
+    {"id": "n4", "type": "chat", "label": "요약 (CS 담당자)", "x": 680, "y": 60, "config": {"system": "당신은 고객센터 담당자입니다. 정중하고 간결하게 말합니다.", "prompt": "{input}"}},
+    {"id": "n5", "type": "chat", "label": "감성 분류 (JSON)", "x": 1020, "y": 200, "config": {"system": "당신은 감성 분석기입니다.", "prompt": "다음 리뷰의 감성을 분류해줘. JSON {\"sentiment\": \"positive|negative|neutral\", \"reason\": \"...\"} 로만 답해.\n\n{input}", "json_mode": true}},
+    {"id": "n6", "type": "output", "label": "요약", "x": 1360, "y": 40, "config": {"title": "요약"}},
+    {"id": "n7", "type": "output", "label": "감성", "x": 1360, "y": 240, "config": {"title": "감성 분류 (JSON)"}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n1", "fromPort": "text", "to": "n3", "toPort": "review"},
+    {"id": "e2", "from": "n3", "fromPort": "text", "to": "n4", "toPort": "input"},
+    {"id": "e3", "from": "n2", "fromPort": "llm", "to": "n4", "toPort": "llm"},
+    {"id": "e4", "from": "n1", "fromPort": "text", "to": "n5", "toPort": "input"},
+    {"id": "e5", "from": "n2", "fromPort": "llm", "to": "n5", "toPort": "llm"},
+    {"id": "e6", "from": "n4", "fromPort": "text", "to": "n6", "toPort": "value"},
+    {"id": "e7", "from": "n5", "fromPort": "json", "to": "n7", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}

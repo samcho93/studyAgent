@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "name": "14 MCP 서버 만들기",
+  "description": "도구(계산기 · 날씨 · 파이썬 도구) · 리소스(사내 규정) · 프롬프트(요약)를 MCP 서버로 묶고, MCP 호출 노드로 tools/list · tools/call · resources/read · prompts/get 요청을 보내 본다. 내보내면 FastMCP 서버 코드가 된다.",
+  "nodes": [
+    {"id": "n1", "type": "tool", "label": "계산기", "x": 40, "y": 40, "config": {"name": "calculator"}},
+    {"id": "n2", "type": "tool", "label": "날씨", "x": 40, "y": 140, "config": {"name": "get_weather"}},
+    {"id": "n3", "type": "pytool", "label": "환율 (직접 작성)", "x": 40, "y": 240, "config": {"code": "def exchange_rate(currency: str) -> dict:\n    \"\"\"통화의 원화 환율을 알려준다 (예시 데이터)\n    currency: 통화 코드 (예: USD)\n    \"\"\"\n    rates = {'USD': 1380.5, 'EUR': 1490.2, 'JPY': 9.1}\n    return {'currency': currency.upper(), 'krw': rates.get(currency.upper(), 0)}\n"}},
+    {"id": "n4", "type": "mcp_resource", "label": "사내 규정", "x": 40, "y": 520, "config": {"uri": "docs://company/policy", "name": "policy", "description": "사내 규정 문서", "mime_type": "text/plain", "content": "연차는 1년에 15일이다.\n재택근무는 주 2회까지 가능하며 팀장 승인이 필요하다.\n점심 시간은 12시부터 1시까지다."}},
+    {"id": "n5", "type": "mcp_prompt", "label": "요약 프롬프트", "x": 40, "y": 740, "config": {"name": "summarize", "description": "글을 세 줄로 요약하는 프롬프트", "template": "다음 글을 {language} 로 세 줄 요약해줘:\n\n{text}"}},
+    {"id": "n6", "type": "mcp_server", "label": "회사 도우미 서버", "x": 440, "y": 300, "config": {"name": "company-helper", "version": "1.0.0", "instructions": "계산 · 날씨 · 환율 도구와 사내 규정 리소스, 요약 프롬프트를 제공합니다.", "transport": "stdio", "host": "127.0.0.1", "port": 8000}},
+    {"id": "n7", "type": "mcp_call", "label": "① tools/list", "x": 820, "y": 40, "config": {"method": "tools/list", "name": "", "arguments": "{}"}},
+    {"id": "n8", "type": "input", "label": "도시", "x": 440, "y": 40, "config": {"text": "부산", "name": "city"}},
+    {"id": "n9", "type": "mcp_call", "label": "② tools/call 날씨", "x": 820, "y": 220, "config": {"method": "tools/call", "name": "get_weather", "arguments": "{}"}},
+    {"id": "n10", "type": "mcp_call", "label": "③ resources/read", "x": 820, "y": 420, "config": {"method": "resources/read", "name": "docs://company/policy", "arguments": "{}"}},
+    {"id": "n11", "type": "mcp_call", "label": "④ prompts/get", "x": 820, "y": 600, "config": {"method": "prompts/get", "name": "summarize", "arguments": "{\"language\": \"한국어\", \"text\": \"MCP 는 LLM 앱이 외부 도구와 자료를 표준 방식으로 쓰게 하는 프로토콜이다.\"}"}},
+    {"id": "n12", "type": "output", "label": "도구 목록", "x": 1200, "y": 40, "config": {"title": "① tools/list"}},
+    {"id": "n13", "type": "output", "label": "날씨 결과", "x": 1200, "y": 220, "config": {"title": "② tools/call get_weather"}},
+    {"id": "n14", "type": "output", "label": "리소스", "x": 1200, "y": 420, "config": {"title": "③ resources/read"}},
+    {"id": "n15", "type": "output", "label": "프롬프트", "x": 1200, "y": 600, "config": {"title": "④ prompts/get"}},
+    {"id": "n16", "type": "note", "label": "메모", "x": 440, "y": 620, "config": {"text": "실행 로그에 JSON-RPC 요청(→)과 응답(←)이 그대로 찍힙니다.\n🐍 Python 코드 탭 = FastMCP 서버 코드 (pip install mcp 후 python 파일.py)"}}
+  ],
+  "edges": [
+    {"id": "e1", "from": "n1", "fromPort": "tool", "to": "n6", "toPort": "tools"},
+    {"id": "e2", "from": "n2", "fromPort": "tool", "to": "n6", "toPort": "tools"},
+    {"id": "e3", "from": "n3", "fromPort": "tool", "to": "n6", "toPort": "tools"},
+    {"id": "e4", "from": "n4", "fromPort": "resource", "to": "n6", "toPort": "resources"},
+    {"id": "e5", "from": "n5", "fromPort": "prompt", "to": "n6", "toPort": "prompts"},
+    {"id": "e6", "from": "n6", "fromPort": "server", "to": "n7", "toPort": "server"},
+    {"id": "e7", "from": "n6", "fromPort": "server", "to": "n9", "toPort": "server"},
+    {"id": "e8", "from": "n8", "fromPort": "text", "to": "n9", "toPort": "input"},
+    {"id": "e9", "from": "n6", "fromPort": "server", "to": "n10", "toPort": "server"},
+    {"id": "e10", "from": "n6", "fromPort": "server", "to": "n11", "toPort": "server"},
+    {"id": "e11", "from": "n7", "fromPort": "result", "to": "n12", "toPort": "value"},
+    {"id": "e12", "from": "n9", "fromPort": "result", "to": "n13", "toPort": "value"},
+    {"id": "e13", "from": "n10", "fromPort": "result", "to": "n14", "toPort": "value"},
+    {"id": "e14", "from": "n11", "fromPort": "result", "to": "n15", "toPort": "value"}
+  ],
+  "settings": {"max_loops": 5}
+}
