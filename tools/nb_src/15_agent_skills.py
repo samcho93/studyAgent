@@ -57,8 +57,7 @@ keywords: 보고서, 요약, 리포트, 문서, 실적
 ## 형식 · 톤
 - 톤과 문단 길이는 [references/tone.md](references/tone.md) 를 따른다.
 ''',
-    'skills/report-writer/references/tone.md': '간결한 경어체. 한 문단은 4문장 이내. 숫자는 천 단위 쉼표, 비율은 소수점 1자리.
-',
+    'skills/report-writer/references/tone.md': '간결한 경어체. 한 문단은 4문장 이내. 숫자는 천 단위 쉼표, 비율은 소수점 1자리.\n',
     'skills/data-cleaner/SKILL.md': '''---
 name: data-cleaner
 description: 숫자 데이터 정리 · 합계 · 평균 · 증감률 계산 요청에 사용한다
