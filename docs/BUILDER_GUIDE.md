@@ -112,12 +112,12 @@ client = MCPClient(server=server)                                             # 
 client.list_tools() · client.call_tool('calculator', {'expression': '1+2'}) · client.tools()  # → [al.Tool …] 에이전트에 바로 연결
 t = agent_as_tool(llm, 'researcher', '조사 담당 에이전트', system='…', tools=[al.wiki_search])   # 에이전트를 도구로 포장
 
-from builder.skills import Skill, SkillSet, skills_apply
+from builder.skills import Skill, SkillSet   # skills_apply 는 내보낸 코드(HELPER)에만 있고 모듈에는 없다 — SkillSet.apply() 를 쓴다
 s = Skill('report-writer', '보고서 · 요약문 작성 요청에 사용', instructions='# 보고서 작성\n1. …', keywords='보고서, 요약', tools=[al.calculator])
 s2 = Skill.from_md(open('SKILL.md').read())  · s.to_md()
 ss = SkillSet([s, s2]); chosen = ss.select('매출 보고서 써줘')  (llm= 을 주면 LLM 이 고른다)
 system = ss.build_system('당신은 비서입니다.', chosen); tools = ss.tools_for(chosen)
-system, tools, selected = skills_apply([s, s2], '매출 보고서 써줘', base_system='당신은 비서입니다.', llm=llm)   # 내보낸 코드가 쓰는 한 줄 버전
+system, tools, selected = ss.apply('매출 보고서 써줘', base_system='당신은 비서입니다.', llm=llm)   # 한 줄 버전 (내보낸 코드의 skills_apply() 와 같은 역할)
 ```
 
 내보내기(export.py): `export_python(graph)` · `skill_files(graph)` → {파일경로: 내용} (SKILL.md 폴더) · `env_example(graph)` → .env.example. mcp_server 노드가 있으면 FastMCP(`pip install mcp`) 서버 스크립트가 된다.
