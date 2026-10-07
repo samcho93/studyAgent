@@ -52,9 +52,9 @@ cat = nodes.catalog()              # 노드 카탈로그 {'categories': [...], '
 | 10_autogen | 코더 ↔ 리뷰어 2자 대화 · 그룹 채팅 | ag10 |
 | 11_assistant_full | 분기 + 도구 에이전트 + RAG + 기억 종합 비서 | ag11 |
 | 13_guardrail | 입력 검사 → 에이전트 → 출력 검사 → LLM 심사 | ag13 |
-| 14_mcp_server | 도구 · 리소스 · 프롬프트 → MCP 서버 → JSON-RPC 호출 테스트 | ag16 |
-| 15_mcp_agent | 에이전트 → 도구 포장 · MCP 클라이언트로 원격 도구 사용 | ag16 |
-| 16_skills | Skill 정의 · SKILL.md 가져오기 · 스킬 선택/프롬프트 조립 | ag17 |
+| 14_mcp_server | 도구 · 리소스 · 프롬프트 → MCP 서버 → JSON-RPC 호출 테스트 | ag14 |
+| 15_mcp_agent | 에이전트 → 도구 포장 · MCP 클라이언트로 원격 도구 사용 | ag14 |
+| 16_skills | Skill 정의 · SKILL.md 가져오기 · 스킬 선택/프롬프트 조립 | ag15 |
 
 ## 3. 노드 카탈로그 (36종) — `type` · 포트 · 설정
 
@@ -132,9 +132,9 @@ system, tools, selected = skills_apply([s, s2], '매출 보고서 써줘', base_
 슬라이드(`layout: 'diagram'`)에서도 같은 html 을 쓸 수 있다. 사용 가능한 캡처:
 `01_overview`(전체 화면) `02_palette`(팔레트) `03_add_nodes` `04_connect_drag` `05_props_chat_panel`(속성) `06_llm_key_panel`(키) `07_keys_modal`(키 관리) `08_run_log`(실행 로그) `09_results` `10_code_panel`(파이썬 코드 탭) `11_json_panel`(그래프 JSON) `12_examples_menu`(예제 메뉴) `13_tool_agent_run` `14_router_loop_run` `15_memory_run` `16_rag_run` `17_crew_run` `18_autogen_run` `19_guardrail_blocked` `20_assistant_full` `21_reflection_run` `23_mcp_server` `23_mcp_call_panel` `23_mcp_log` `24_mcp_agent_run` `26_skills` `26_skill_panel` `26_skill_prompt`
 
-## 6. 차시 구성 (Part 5 · Part 6)
+## 6. 차시 구성 — Part 5 = MCP · Agent Skills (ag14 · ag15), Part 6 = agentBuilder (ag16 · ag17)
 
-- **ag14 agentBuilder 시작하기** — 빌더 화면(①상단 바 ②팔레트 ③캔버스 ④속성/코드/JSON ⑤실행/결과), 노드 · 포트(색 = 종류) · 간선, 첫 그래프(01) 만들기, 속성(역할 · 프롬프트 · JSON), 키 관리(서버 금고 `key_ref` vs 브라우저 세션 — 그래프 · 코드 · 로그에 키가 없음), 실행 로그 읽기, 🐍 파이썬 코드 내보내기 ↔ 강좌의 agentlab 코드 1:1 대응, 📦 ZIP · `run_graph.py`. 브라우저 실습: 그래프 JSON 을 파이썬으로 읽고 실행 · 검증 · 내보내기 · 노드를 코드로 추가해 보기.
-- **ag15 agentBuilder 로 다시 만드는 에이전트** — 예제 04 · 05 · 06 · 08 · 09 · 10 · 11 · 13 을 강좌 차시와 대응시키며 그래프 읽기 → 실행 → 내보낸 코드 비교: 도구 에이전트, 기억(session 유지), RAG, 계획/반성, 조건 분기 · 병합 · 되돌아가기(루프, max_loops), Crew, AutoGen, 가드레일 · LLM 심사, 종합 비서. 브라우저 실습: 그래프를 코드로 수정(노드 추가 · 분기 조건 바꾸기 · 도구 추가)하고 실행.
-- **ag16 MCP(Model Context Protocol)** (Part 6) — 왜 표준이 필요한가(도구를 앱마다 다시 연결하는 문제, M×N → M+N), 구조(호스트 · 클라이언트 · 서버), JSON-RPC 2.0 메서드(initialize · tools/list · tools/call · resources/list · resources/read · prompts/list · prompts/get), 전송(stdio · Streamable HTTP), 미니 MCP 서버를 파이썬으로 만들고 요청/응답을 직접 보기(builder.mcp.MiniMCPServer.handle), MCPClient 로 도구를 받아 에이전트에 연결, 에이전트를 도구로 포장해 MCP 로 노출(agent_as_tool), agentBuilder 의 MCP 노드(예제 14 · 15)와 🧰 MCP 서버 실행 버튼, FastMCP(공식 SDK `pip install mcp`) 서버 코드(run:false)와 Claude Desktop · Cursor `mcpServers` 등록, 보안(토큰 · 허용 목록 · 사용자 승인). Colab: FastMCP 서버 + 클라이언트 실제 실행.
-- **ag17 Agent Skills** (Part 6) — 스킬이란(지시문 + 참고 자료 + 스크립트/도구를 폴더로 묶은 재사용 능력), SKILL.md 형식(frontmatter name · description · 본문 지시문 · references/ · scripts/), 점진적 로딩(1단계: 이름 · 설명만 → 2단계: 선택된 스킬의 지시문 · 도구 활성화)의 이유(컨텍스트 절약), builder.skills.Skill / SkillSet / skills_apply 로 직접 구현(키워드 선택 · LLM 선택), 스킬 vs 도구 vs 시스템 프롬프트 비교, agentBuilder 의 Skill 노드(예제 16)와 📁 SKILL.md 폴더 내보내기, 좋은 description 쓰기(언제 쓰는지), Claude Code(`.claude/skills/`) · Managed Agents(`skills` 배열 · Skills API) · Messages API(`container.skills`) · claude.ai 에 붙이는 방법(run:false 요약), 스킬 평가(선택 정확도 테스트). Colab: 스킬 폴더 생성 · zip · 간단한 선택 평가.
+- **ag16 agentBuilder 시작하기** (Part 6) — 빌더 화면(①상단 바 ②팔레트 ③캔버스 ④속성/코드/JSON ⑤실행/결과), 노드 · 포트(색 = 종류) · 간선, 첫 그래프(01) 만들기, 속성(역할 · 프롬프트 · JSON), 키 관리(서버 금고 `key_ref` vs 브라우저 세션 — 그래프 · 코드 · 로그에 키가 없음), 실행 로그 읽기, 🐍 파이썬 코드 내보내기 ↔ 강좌의 agentlab 코드 1:1 대응, 📦 ZIP · `run_graph.py`. 브라우저 실습: 그래프 JSON 을 파이썬으로 읽고 실행 · 검증 · 내보내기 · 노드를 코드로 추가해 보기.
+- **ag17 agentBuilder 로 다시 만드는 에이전트** (Part 6) — 예제 04 · 05 · 06 · 08 · 09 · 10 · 11 · 13 을 강좌 차시와 대응시키며 그래프 읽기 → 실행 → 내보낸 코드 비교: 도구 에이전트, 기억(session 유지), RAG, 계획/반성, 조건 분기 · 병합 · 되돌아가기(루프, max_loops), Crew, AutoGen, 가드레일 · LLM 심사, 종합 비서. 브라우저 실습: 그래프를 코드로 수정(노드 추가 · 분기 조건 바꾸기 · 도구 추가)하고 실행.
+- **ag14 MCP(Model Context Protocol)** (Part 5) — 왜 표준이 필요한가(도구를 앱마다 다시 연결하는 문제, M×N → M+N), 구조(호스트 · 클라이언트 · 서버), JSON-RPC 2.0 메서드(initialize · tools/list · tools/call · resources/list · resources/read · prompts/list · prompts/get), 전송(stdio · Streamable HTTP), 미니 MCP 서버를 파이썬으로 만들고 요청/응답을 직접 보기(builder.mcp.MiniMCPServer.handle), MCPClient 로 도구를 받아 에이전트에 연결, 에이전트를 도구로 포장해 MCP 로 노출(agent_as_tool), agentBuilder 의 MCP 노드(예제 14 · 15)와 🧰 MCP 서버 실행 버튼, FastMCP(공식 SDK `pip install mcp`) 서버 코드(run:false)와 Claude Desktop · Cursor `mcpServers` 등록, 보안(토큰 · 허용 목록 · 사용자 승인). Colab: FastMCP 서버 + 클라이언트 실제 실행.
+- **ag15 Agent Skills** (Part 5) — 스킬이란(지시문 + 참고 자료 + 스크립트/도구를 폴더로 묶은 재사용 능력), SKILL.md 형식(frontmatter name · description · 본문 지시문 · references/ · scripts/), 점진적 로딩(1단계: 이름 · 설명만 → 2단계: 선택된 스킬의 지시문 · 도구 활성화)의 이유(컨텍스트 절약), builder.skills.Skill / SkillSet / skills_apply 로 직접 구현(키워드 선택 · LLM 선택), 스킬 vs 도구 vs 시스템 프롬프트 비교, agentBuilder 의 Skill 노드(예제 16)와 📁 SKILL.md 폴더 내보내기, 좋은 description 쓰기(언제 쓰는지), Claude Code(`.claude/skills/`) · Managed Agents(`skills` 배열 · Skills API) · Messages API(`container.skills`) · claude.ai 에 붙이는 방법(run:false 요약), 스킬 평가(선택 정확도 테스트). Colab: 스킬 폴더 생성 · zip · 간단한 선택 평가.

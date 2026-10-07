@@ -9,9 +9,9 @@
 | 교과목명 | AI 에이전트 구축: 파이썬으로 만드는 LLM 에이전트 |
 | 사이트 명 | **AI Agent Lab** |
 | 배포 URL | `https://samcho93.github.io/studyAgent` |
-| 기간 | 18차시 (차시당 2~3교시 × 50분) — Part 5(14~15) agentBuilder · Part 6(16~17) MCP · Agent Skills |
+| 기간 | 18차시 (차시당 2~3교시 × 50분) — Part 5(14~15) MCP · Agent Skills · Part 6(16~17) agentBuilder |
 | 언어 | 한국어 (코드 주석·변수명은 영어) |
-| 시리즈 | ① studyMLBasic → ② MLStudio → ③ studyLLM → ④ studyRAG → ⑤ **studyAgent (이 과정)** → ⑥ studyOntology · 도구: agentBuilder(Part 5 · 6) |
+| 시리즈 | ① studyMLBasic → ② MLStudio → ③ studyLLM → ④ studyRAG → ⑤ **studyAgent (이 과정)** → ⑥ studyOntology · 도구: agentBuilder(Part 6) |
 
 학습 흐름: **원리를 브라우저에서 직접 구현(agentlab)** → **실제 프레임워크(LangChain · LangGraph · CrewAI · AutoGen)를 Colab 에서 사용** → **프로젝트 2개**(비서 에이전트 · 마케팅 에이전트 팀).
 
@@ -32,7 +32,7 @@ js/   app.js(화면) · slides.js · runner.js · py-engine.js · py-worker.js(P
 css/  style.css · slides.css · gui.css
 py/agentlab/  llm.py(공급자 추상화) · mock.py(모의 LLM) · tools.py · memory.py · agent.py · chain.py · graph.py · crew.py · autogen.py
 py/builder/   agentBuilder 실행 엔진 복사본 (nodes · engine · export · providers · mcp · skills) — 원본은 ../agentBuilder, 여기서 고치지 말고 tools/sync_builder.py 로 동기화
-assets/builder/*.json  빌더 예제 그래프 (작업 폴더에 builder/ 로 복사됨) · img/builder/ 튜토리얼 캡처 · docs/BUILDER_GUIDE.md Part 5 작성 가이드
+assets/builder/*.json  빌더 예제 그래프 (작업 폴더에 builder/ 로 복사됨) · img/builder/ 튜토리얼 캡처 · docs/BUILDER_GUIDE.md Part 5 · 6 작성 가이드
 lessons/agNN.js   차시 콘텐츠 — 작성 규칙은 docs/LESSON_GUIDE.md
 tools/nb_src/*.py → python tools/build_notebooks.py → notebooks/*.ipynb (Colab)
 tools/validate.js 검증
