@@ -96,7 +96,9 @@
   }
 
   function setRole(role, silent) {
-    if (role === 'teacher' && !teacherAllowed()) {
+    // irodmas.com 회원 구분(window.SAMSTUDY_ROLE): 학생은 교사용 불가, 교사는 비밀번호 없이
+    if (role === 'teacher' && window.SAMSTUDY_ROLE === 'student') role = 'student';
+    if (role === 'teacher' && window.SAMSTUDY_ROLE !== 'teacher' && !teacherAllowed()) {
       document.querySelectorAll('.role-switch button').forEach((b) => b.classList.toggle('active', b.dataset.role === app.role));
       return;
     }
