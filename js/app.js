@@ -409,14 +409,15 @@
       </div>
 
       <h2>학습 경로</h2>
-      <p>이 과정은 여섯 과정으로 이어지는 시리즈의 <b>다섯 번째</b>입니다. LLM 과정의 <b>API · 프롬프트 · 도구 호출</b>, RAG 과정의 <b>임베딩 검색</b>이 이 과정의 메모리와 도구로 이어지고, 마지막 과정 <b>온톨로지와 지식 그래프</b>에서는 에이전트가 기댈 지식을 관계 · 규칙으로 명시합니다. Part 5 에서는 <b>MCP</b> 와 <b>Agent Skills</b> 로 에이전트를 확장하고, Part 6 에서는 배운 구조를 <b>agentBuilder</b>(노드 기반 빌더)로 조립 · 실행합니다.</p>
-      <div class="pathway path-6">
+      <p>이 과정은 일곱 과정으로 이어지는 시리즈의 <b>다섯 번째</b>입니다. LLM 과정의 <b>API · 프롬프트 · 도구 호출</b>, RAG 과정의 <b>임베딩 검색</b>이 이 과정의 메모리와 도구로 이어지고, 마지막 과정 <b>온톨로지와 지식 그래프</b>에서는 에이전트가 기댈 지식을 관계 · 규칙으로 명시합니다. Part 5 에서는 <b>MCP</b> 와 <b>Agent Skills</b> 로 에이전트를 확장하고, Part 6 에서는 배운 구조를 <b>agentBuilder</b>(노드 기반 빌더)로 조립 · 실행합니다. 연결 과정 ⑦ <b>MLOps</b>의 LLMOps 차시에서는 이렇게 만든 에이전트를 평가 · 추적 · 비용 관리하며 운영하는 방법을 다룹니다.</p>
+      <div class="pathway path-7">
         <a class="card" href="https://samcho93.github.io/studyMLBasic/" target="_blank" rel="noopener"><span class="cn">① 이전 과정 ↗</span><span class="ci">🤖</span><span class="ct">머신러닝 기초</span><span class="cs">회귀 · 분류 · 평가 · 신경망 · CNN</span></a>
         <a class="card" href="https://samcho93.github.io/MLStudio/" target="_blank" rel="noopener"><span class="cn">② 이전 과정 ↗</span><span class="ci">🧩</span><span class="ct">ML Node Studio</span><span class="cs">노드를 연결해 데이터 → 모델 → 평가</span></a>
         <a class="card" href="https://samcho93.github.io/studyLLM/" target="_blank" rel="noopener"><span class="cn">③ 이전 과정 ↗</span><span class="ci">🧠</span><span class="ct">LLM 원리와 활용</span><span class="cs">토큰 · 어텐션 · 미니 GPT · API</span></a>
         <a class="card" href="https://samcho93.github.io/studyRAG/" target="_blank" rel="noopener"><span class="cn">④ 이전 과정 ↗</span><span class="ci">🔎</span><span class="ct">RAG 시스템 구축</span><span class="cs">청킹 · 임베딩 검색 · 평가 · 인용</span></a>
         <div class="card is-here"><span class="cn">⑤ 지금 이 과정</span><span class="ci">🕵️</span><span class="ct">AI 에이전트 구축</span><span class="cs">도구 호출 · 메모리 · 계획 · LangGraph · CrewAI · AutoGen</span></div>
         <a class="card" href="https://samcho93.github.io/studyOntology/" target="_blank" rel="noopener"><span class="cn">⑥ 다음 과정 ↗</span><span class="ci">🕸️</span><span class="ct">온톨로지와 지식 그래프</span><span class="cs">트리플 · SPARQL · 추론 · 검증 · GraphRAG</span></a>
+        <a class="card" href="https://samcho93.github.io/studyMLOps/" target="_blank" rel="noopener"><span class="cn">⑦ 연결 과정 ↗</span><span class="ci">♾️</span><span class="ct">MLOps: 모델 운영</span><span class="cs">실험 추적 · 레지스트리 · 서빙 · 배포 · 모니터링 · LLMOps</span></a>
       </div>
       <p>🧩 함께 쓰는 도구: <a href="https://samcho93.github.io/agentBuilder/" target="_blank" rel="noopener"><b>agentBuilder</b> ↗</a> — 이 과정에서 배운 에이전트를 노드로 조립 · 실행하고 파이썬 코드로 내보내는 빌더 (Part 6 에서 사용)</p>
 
